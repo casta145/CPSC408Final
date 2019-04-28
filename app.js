@@ -11,6 +11,7 @@ const bodyParser = require('body-parser')
 app.use(morgan('short'))
 //this allows access to the any file in the public folder
 app.use(express.static('./public'))
+app.use(express.static('./public/js'))
 //this allows us to parse any info we are attemping to collect form the webpage
 app.use(bodyParser.urlencoded({extended: false}))
 
@@ -25,7 +26,7 @@ function getConnection() {
 }
 
 //this connects to out main page
-app.get("/index.html", (req, res) => {
+app.get("/js/index.html", (req, res) => {
   console.log("Responding to root route")
   res.send("Hello from root")
 })

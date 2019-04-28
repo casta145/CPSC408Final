@@ -1,0 +1,91 @@
+/*
+yellow color: #f2c43e
+*/
+
+.header {
+  background-color: #f2c43e;
+  margin-top: -10px;
+  margin-left: -10px;
+  margin-right: -10px;
+  padding: 10px;
+
+}
+
+.logo {
+  width: 150px;
+  float: left;
+  margin-right: 20px;
+}
+
+.slogan {
+  font-family: Impact;
+  font-size: 20px;
+  margin-top: 10px;
+  position: relative;
+}
+
+.index-content {
+  text-align: center;
+  align-content: center;
+}
+
+.index-content p {
+  margin-bottom: 5%;
+}
+
+.name {
+  font-family: Impact;
+  font-size: 50px;
+}
+
+.name i {
+  font-size: 40px;
+}
+
+.login-form button {
+  background-color: #f2c43e;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin-bottom: 5%;
+
+}
+
+.login-form button:hover {
+  background-color: #f2c43e;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin-bottom: 5%;
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.login-form input{
+  margin-left: 30%;
+  width: 40%;
+  padding: 12px;
+  margin-bottom: 2%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.userName {
+
+  display: block;
+
+}
+
+.passWord {
+  align-content: center;
+  display: block;
+}
