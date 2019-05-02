@@ -2,8 +2,9 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Homepage</title>
+    <title>Login Page</title>
     <link rel="stylesheet" type ="text/css" href = "css/main.css" />
+    <link rel="stylesheet" type ="text/css" href = "css/header.css" />
   </head>
   <body>
     <div class="header">
@@ -13,14 +14,14 @@
     <div class="index-content">
       <p class="name">Maxxhaul <i>Inventory Database</i></p>
 <!-- Need to create an action that links to the database to make sure that the credentials checkout-->
-      <form class="login-form" action="" method="POST">
-        <input class="userName" placeholder="user" name="user_name"/>
-        <input class="passWord" placeholder="password" name="passwd"/>
+      <form class="login-form" action="auth" method="POST">
+        <input class="userName" placeholder="email" name="email"/>
+        <input class="passWord" placeholder="password" name="password"/>
         <button>Submit</button>
       </form>
 
       <a href="/form.html" class="login-button"><b>Login</b></a>
-      
+
     </div>
   </body>
 </html>

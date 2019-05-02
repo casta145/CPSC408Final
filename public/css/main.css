@@ -2,28 +2,6 @@
 yellow color: #f2c43e
 */
 
-.header {
-  background-color: #f2c43e;
-  margin-top: -10px;
-  margin-left: -10px;
-  margin-right: -10px;
-  padding: 10px;
-
-}
-
-.logo {
-  width: 150px;
-  float: left;
-  margin-right: 20px;
-}
-
-.slogan {
-  font-family: Impact;
-  font-size: 20px;
-  margin-top: 10px;
-  position: relative;
-}
-
 .index-content {
   text-align: center;
   align-content: center;

@@ -6,14 +6,21 @@ const app = express()
 const mysql = require('mysql')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
+var session = require('express-session');
 
 //outputs our api requests to console to help display what is occuring
 app.use(morgan('short'))
 //this allows access to the any file in the public folder
 app.use(express.static('./public'))
-app.use(express.static('./public/js'))
+app.use(express.static('./public/html'))
 //this allows us to parse any info we are attemping to collect form the webpage
 app.use(bodyParser.urlencoded({extended: false}))
+
+app.use(session({
+	secret: 'secret',
+	resave: true,
+	saveUninitialized: true
+}));
 
 //this function allows us to reuse our connection to the database
 function getConnection() {
@@ -26,10 +33,39 @@ function getConnection() {
 }
 
 //this connects to out main page
-app.get("/js/index.html", (req, res) => {
+app.get("/html/index.html", (req, res) => {
   console.log("Responding to root route")
   res.send("Hello from root")
 })
+
+app.post('/auth', function(request, response) {
+	var email = request.body.email;
+	var password = request.body.password;
+	if (email && password) {
+		getConnection().query('SELECT * FROM Accounts WHERE email = ? AND password = ?', [email, password], function(error, results, fields) {
+			if (results.length > 0) {
+				request.session.loggedin = true;
+				request.session.email = email;
+				response.redirect('/home.html');
+			} else {
+				response.send('Incorrect Email and/or Password!');
+			}
+			response.end();
+		});
+	} else {
+		response.send('Please enter Email and Password!');
+		response.end();
+	}
+});
+
+app.get('/home', function(request, response) {
+	if (request.session.loggedin) {
+		response.send('Welcome back!');
+	} else {
+		response.send('Please login to view this page!');
+	}
+	response.end();
+});
 
 //this allows the user to create a new user and insert them into the database
 app.post("/user_create", (req, res) => {
@@ -38,7 +74,7 @@ app.post("/user_create", (req, res) => {
   const firstName = req.body.create_first_name
   const lastName = req.body.create_last_name
 
-  const queryString = "INSERT INTO Users(FirstName,LastName) VALUES (?,?)"
+  const queryString = "INSERT INTO TestUsers(FirstName,LastName) VALUES (?,?)"
   getConnection().query(queryString, [firstName, lastName], (error, results, fields) => {
     if(error) {
       console.log("It appears there was an error inserting into the database: " + error)
@@ -59,7 +95,7 @@ app.get('/users/:id', (req, res) => {
   const connection = getConnection()
 
   const userId = req.params.id
-  const queryString = "SELECT * FROM Users WHERE ID = ?"
+  const queryString = "SELECT * FROM TestUsers WHERE ID = ?"
   connection.query(queryString, [userId], (error, rows, fields) => {
     if (error)  {
         console.log("YO there is an error: " + error.stack);
