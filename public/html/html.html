@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Upload to Database</title>
+<!--
+    <div>
+      <label for ="file"><strong>Upload a CSV File:</strong></label>
+      <input type= "file" id = "csv" accept=".csv">
+    </div>
+-->
+    <div>
+      <!-- <button onclick="checkInput(this.file)">Upload</button> -->
+      <form class="submit-form" action="insertDB" method="POST">
+        <input action="insertDB" name="csv_file" type= "file" id ="csv" accept=".csv">
+        <button>Submit</button>
+      </form>
+    </div>
+  </head>
+</html>

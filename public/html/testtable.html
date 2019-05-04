@@ -1,0 +1,26 @@
+<html>
+  <body>
+  <table border="1" cellpadding="7" cellspacing="7">
+    <tr>
+      <th width="50px">No</th>
+      <th>Field 1</th>
+      <th>Field 2</th>
+      <th>Field 3</th>
+    </tr>
+    <% if(data.length){
+      for(var i = 0;i < data.length;i++) { %>
+    <tr>
+      <td><%=(i+1)%></td>
+      <td><%=data[i].field1%></td>
+      <td><%=data[i].field2%></td>
+      <td><%=data[i].field3%></td>
+    </tr>
+    <% }
+    }else{ %>
+    <tr>
+      <td colspan="3">No user</td>
+    </tr>
+  <% } %>
+  </table>
+  </body>
+</html>

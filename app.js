@@ -7,6 +7,9 @@ const mysql = require('mysql')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
 var session = require('express-session');
+const fs = require('fs');
+const csv = require('fast-csv');
+const multer = require('multer');
 
 //outputs our api requests to console to help display what is occuring
 app.use(morgan('short'))
@@ -48,7 +51,8 @@ app.post('/auth', function(request, response) {
 				request.session.email = email;
 				response.redirect('/home.html');
 			} else {
-				response.send('Incorrect Email and/or Password!');
+        response.redirect('/index.html')
+        //response.send('Incorrect Email and/or Password!');
 			}
 			response.end();
 		});
@@ -58,9 +62,9 @@ app.post('/auth', function(request, response) {
 	}
 });
 
-app.get('/home', function(request, response) {
+app.get('/home.html', function(request, response) {
 	if (request.session.loggedin) {
-		response.send('Welcome back!');
+		//response.send('Welcome back!');
 	} else {
 		response.send('Please login to view this page!');
 	}
@@ -120,4 +124,38 @@ app.get("/users", (req, res) => {
 //localhost 3000
 app.listen(3030, () => {
   console.log("Server is up and running on 3030...")
+})
+
+// -> Import CSV File to MySQL database
+function importCsvData2MySQL(filePath){
+    let stream = fs.createReadStream(filePath, 'utf-8');
+    let csvData = [];
+    let csvStream = csv
+        .parse()
+        .on("data", function (data) {
+            csvData.push(data);
+        })
+        .on("end", function () {
+            // Remove Header ROW
+            csvData.shift();
+            // Open the MySQL connection
+            getConnection().connect((error) => {
+                if (error) {
+                    console.error(error);
+                } else {
+                    let query = 'INSERT INTO TestTable (SKU, Test1, Test2, Test3, Test4, Test5, Test6) VALUES ?';
+                    getConnection().query(query, [csvData], (error, response) => {
+                        console.log(error || response);
+                    });
+                }
+            });
+  // delete file after saving to MySQL database
+  // fs.unlinkSync(filePath)
+          });
+  stream.pipe(csvStream);
+}
+
+app.post("/insertDB", (req, res) => {
+  var csvfile = req.body.csv_file;
+  importCsvData2MySQL(csvfile)
 })

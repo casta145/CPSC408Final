@@ -4,12 +4,89 @@
     <meta charset="utf-8">
     <title>Homepage</title>
     <link rel="stylesheet" type ="text/css" href = "css/header.css" />
+    <link rel="stylesheet" type ="text/css" href = "css/home.css" />
+    <!--bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
   </head>
   <body>
     <div class="header">
       <a href="https://www.maxxhaul.com/" target="_blank"><img src="imgs/MaxxhaulLogo.png" alt="Maxxhaul Logo" class="logo"></a>
       <p class="slogan">Manufacturer and Distributor of Towing and Truck Accessories</p>
     </div>
-    <h1>Welcome!</h1>
+    <div class="welcome-block">
+      <h2>Welcome!</h2>
+    </div>
+
+    <div class="sell-quick-table">
+      Sellable on Hand
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm">
+          <form action="/products.ejs">
+            <button type="submit" class="large-buttons">Products</button>
+          </form>
+          <button type="button" class="large-buttons">Sales Reports</button> <br>
+        </div>
+        <div class="col-sm">
+          <form action="/shipping.ejs">
+            <button type="submit" class="large-buttons">Shipping</button>
+          </form>
+          <!-- Trigger/Open The Modal -->
+          <button id="myBtn" class="large-buttons">Import</button>
+        </div>
+        <div class="col-sm">
+          <form action="/sales.ejs">
+            <button type="submit" class="large-buttons">Sales</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+    <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Choose a file to import:</p>
+        <form class="submit-form" action="insertDB" method="POST">
+          <input action="insertDB" name="csv_file" type= "file" id ="csv" accept=".csv">
+          <button>Submit</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      // Get the modal
+      var modal = document.getElementById('myModal');
+
+      // Get the button that opens the modal
+      var btn = document.getElementById("myBtn");
+
+      // Get the <span> element that closes the modal
+      var span = document.getElementsByClassName("close")[0];
+
+      // When the user clicks the button, open the modal
+      btn.onclick = function() {
+        modal.style.display = "block";
+        }
+
+      // When the user clicks on <span> (x), close the modal
+      span.onclick = function() {
+        modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
+</script>
+
   </body>
 </html>
