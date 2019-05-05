@@ -22,10 +22,20 @@
 
     <div class="product-content">
       <p>SKU Number:</p>
-      <form class="search-form" action="product-search" method="GET">
+      <form class="search-form" action="product-search" method="post">
         <input class="sku-search" name="skuNumber"/>
         <button>Submit</button>
       </form>
     </div>
-  </body>
 </html>
+
+
+
+
+<!-- <script type="text/javascript">
+  var table = document.getElementById("myTable");
+  getConnection().query('SELECT * FROM SalesTable', function(error, results, fields) {
+  myTable.appendChild(results);
+  console.log("Should have printed in output")
+  })
+</script> -->

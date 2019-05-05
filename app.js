@@ -11,6 +11,11 @@ const fs = require('fs');
 const csv = require('fast-csv');
 const multer = require('multer');
 
+//functions in other js files
+var conn = require('./dbConnection');
+var create = require('./createTables');
+var importCSV = require('./Import')
+
 //outputs our api requests to console to help display what is occuring
 app.use(morgan('short'))
 //this allows access to the any file in the public folder
@@ -25,15 +30,10 @@ app.use(session({
 	saveUninitialized: true
 }));
 
-//this function allows us to reuse our connection to the database
-function getConnection() {
-  return mysql.createConnection({
-    host     : '35.233.130.214',
-    database : 'maxxhaul',
-    user     : 'ramir266',
-    password : 'torNado911!',
-  })
-}
+//localhost 3000
+app.listen(3030, () => {
+  console.log("Server is up and running on 3030...")
+})
 
 //this connects to out main page
 app.get("/html/index.html", (req, res) => {
@@ -41,20 +41,16 @@ app.get("/html/index.html", (req, res) => {
   res.send("Hello from root")
 })
 
-app.get("/product-search", (req, res) => {
-  console.log("Responding to root route")
-  res.send("Hello from root")
-})
-
+//authenticates uers credentials before login
 app.post('/auth', function(request, response) {
 	var email = request.body.email;
 	var password = request.body.password;
 	if (email && password) {
-		getConnection().query('SELECT * FROM Accounts WHERE email = ? AND password = ?', [email, password], function(error, results, fields) {
+		conn.query('SELECT * FROM Accounts WHERE email = ? AND password = ?', [email, password], function(error, results, fields) {
 			if (results.length > 0) {
 				request.session.loggedin = true;
 				request.session.email = email;
-        intializeTables();
+        create;
 				response.redirect('/home.html');
 			} else {
         response.redirect('/index.html')
@@ -68,6 +64,7 @@ app.post('/auth', function(request, response) {
 	}
 });
 
+//routes to home page
 app.get('/home.html', function(request, response) {
 	if (request.session.loggedin) {
 		//response.send('Welcome back!');
@@ -77,6 +74,135 @@ app.get('/home.html', function(request, response) {
 	response.end();
 });
 
+app.post("/insertDB", (req, res) => {
+  var csvfile = req.body.csv_file;
+  //importCsvData2MySQL(csvfile);
+  importCSV.import(csvfile);
+})
+
+// function skuSearch() {
+//   var sqlquery = "SELECT * FROM SalesTable";
+//   conn.query(sqlquery, function(error,res,fields){
+//
+//   })
+//   console.log(res);
+// }
+
+app.post('/product-search', (req, res) => {
+  console.log("Should have printed in output");
+  var sku = req.body.skuNumber;
+  const sqlquery = "SELECT * FROM USWarehouse WHERE SKU = ?"
+  conn.query(sqlquery, [sku],function(error,rows,fields) {
+    res.json(rows);
+  })
+});
+
+
+// // -> Import CSV File to MySQL database
+// function importCsvData2MySQL(filePath){
+//     var sku = [];
+//     var Description = [];
+//     var SellableOnHand = [];
+//     var OpenPOqty = [];
+//     var OneMonthSales = [];
+//     var ThreeMonthSales = [];
+//     var SixMonthSales = [];
+//     var BackOrder = [];
+//     var LeadTime = [];
+//     var MoQ = [];
+//     var FobSH = [];
+//     var PackagingType = [];
+//     var L_cm = [];
+//     var W_cm = [];
+//     var H_cm = [];
+//     var GW_kg = [];
+//     var NW_kg = [];
+//     var Carton_qty = [];
+//     var Pallet_Dim_cm = [];
+//     var Pallet_Ctns = [];
+//     var Pallet_qty = [];
+//     var Pallet_WG_qty = [];
+//     var Shipping_Date = [];
+//     var Shipping_PO = [];
+//     var Shipping_Qty = [];
+//     var Cost_Unit = [];
+//     var Shipping_Amt = [];
+//     var Shpmt_Received = [];
+//     var Shpmt_Date_Received = [];
+//     var Vendor = [];
+//     var Sales_PO = [];
+//     var Sales_Qty = [];
+//     var Sales_Date = [];
+//     var Sales_Amt = [];
+//
+//     let stream = fs.createReadStream(filePath, 'utf-8');
+//     let csvData = [];
+//     let csvStream = csv
+//         .parse()
+//         .on("data", function (data) {
+//             csvData.push(data);
+//         })
+//         .on("end", function () {
+//             // Remove Header ROW
+//             csvData.shift();
+//             //loop through each item in array and save them to appropriate sub-array
+//             // csvData.forEach(function(entry) {
+//             //   sku = csvData[0];
+//             //   Description = csvData[1];
+//             //   SellableOnHand = csvData[2];
+//             //   OpenPOqty = csvData[3];
+//             //   OneMonthSales = csvData[4];
+//             //   ThreeMonthSales = csvData[5];
+//             //   SixMonthSales = csvData[6];
+//             //   BackOrder = csvData[7];
+//             //   LeadTime = csvData[8];
+//             //   MoQ = csvData[9];
+//             //   FobSH = csvData[10];
+//             //   PackagingType = csvData[11];
+//             //   L_cm = csvData[12];
+//             //   W_cm = csvData[13];
+//             //   H_cm = csvData[14];
+//             //   GW_kg = csvData[15];
+//             //   NW_kg = csvData[16];
+//             //   Carton_qty = csvData[17];
+//             //   Pallet_Dim_cm = csvData[18];
+//             //   Pallet_Ctns = csvData[19];
+//             //   Pallet_qty = csvData[20];
+//             //   Pallet_WG_qty = csvData[21];
+//             //   Shipping_Date = csvData[22];
+//             //   Shipping_PO = csvData[23];
+//             //   Shipping_Qty = csvData[24];
+//             //   Cost_Unit = csvData[25];
+//             //   Shipping_Amt = csvData[26];
+//             //   Shpmt_Received = csvData[27];
+//             //   Shpmt_Date_Received = csvData[28];
+//             //   Vendor = csvData[29];
+//             //   Sales_PO = csvData[30];
+//             //   Sales_Qty = csvData[31];
+//             //   Sales_Date = csvData[32];
+//             //   Sales_Amt = csvData[33];
+//             // });
+//             // Open the MySQL connection
+//             // conn.connect((error) => {
+// //                 if (error) {
+// //                     console.error(error);
+// //                 } else {
+//                     let query = 'INSERT INTO TestTable (SKU, Test1, Test2, Test3, Test4, Test5, Test6) VALUES ?';
+//                     conn.query(query, [csvData], (error, response) => {
+//                         console.log(error || response);
+//                     });
+//                 })
+// //             });
+//   // delete file after saving to MySQL database
+//   // fs.unlinkSync(filePath)
+//   //         });
+//   stream.pipe(csvStream);
+// }
+
+//Anything below here is stuff used for testing purposes
+//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 //this allows the user to create a new user and insert them into the database
 app.post("/user_create", (req, res) => {
   console.log("Attempting to create a new user ...")
@@ -85,7 +211,7 @@ app.post("/user_create", (req, res) => {
   const lastName = req.body.create_last_name
 
   const queryString = "INSERT INTO TestUsers(FirstName,LastName) VALUES (?,?)"
-  getConnection().query(queryString, [firstName, lastName], (error, results, fields) => {
+  conn.query(queryString, [firstName, lastName], (error, results, fields) => {
     if(error) {
       console.log("It appears there was an error inserting into the database: " + error)
       res.sendStatus(500)
@@ -99,14 +225,22 @@ app.post("/user_create", (req, res) => {
   res.end()
 })
 
+app.get("/users", (req, res) => {
+  var user1 = {firstName: "Alberto" , lastName: "Garibay"}
+  const user2 = {firstName: "Kolby" , lastName: "Ramirez"}
+  res.json([user1, user2])
+
+  //res.send("Nodemon updates when i save file")
+})
+
 app.get('/users/:id', (req, res) => {
   console.log("Fetching user with id: " + req.params.id)
 
-  const connection = getConnection()
+  // const connection = getConnection()
 
   const userId = req.params.id
   const queryString = "SELECT * FROM TestUsers WHERE ID = ?"
-  connection.query(queryString, [userId], (error, rows, fields) => {
+  conn.query(queryString, [userId], (error, rows, fields) => {
     if (error)  {
         console.log("YO there is an error: " + error.stack);
         res.end()
@@ -118,229 +252,3 @@ app.get('/users/:id', (req, res) => {
   })
   //res.end()
 })
-
-app.get("/users", (req, res) => {
-  var user1 = {firstName: "Alberto" , lastName: "Garibay"}
-  const user2 = {firstName: "Kolby" , lastName: "Ramirez"}
-  res.json([user1, user2])
-
-  //res.send("Nodemon updates when i save file")
-})
-
-//localhost 3000
-app.listen(3030, () => {
-  console.log("Server is up and running on 3030...")
-})
-
-// -> Import CSV File to MySQL database
-function importCsvData2MySQL(filePath){
-    var sku = [];
-    var Description = [];
-    var SellableOnHand = [];
-    var OpenPOqty = [];
-    var OneMonthSales = [];
-    var ThreeMonthSales = [];
-    var SixMonthSales = [];
-    var BackOrder = [];
-    var LeadTime = [];
-    var MoQ = [];
-    var FobSH = [];
-    var PackagingType = [];
-    var L_cm = [];
-    var W_cm = [];
-    var H_cm = [];
-    var GW_kg = [];
-    var NW_kg = [];
-    var Carton_qty = [];
-    var Pallet_Dim_cm = [];
-    var Pallet_Ctns = [];
-    var Pallet_qty = [];
-    var Pallet_WG_qty = [];
-    var Shipping_Date = [];
-    var Shipping_PO = [];
-    var Shipping_Qty = [];
-    var Cost_Unit = [];
-    var Shipping_Amt = [];
-    var Shpmt_Received = [];
-    var Shpmt_Date_Received = [];
-    var Vendor = [];
-    var Sales_PO = [];
-    var Sales_Qty = [];
-    var Sales_Date = [];
-    var Sales_Amt = [];
-
-    let stream = fs.createReadStream(filePath, 'utf-8');
-    let csvData = [];
-    let csvStream = csv
-        .parse()
-        .on("data", function (data) {
-            csvData.push(data);
-        })
-        .on("end", function () {
-            // Remove Header ROW
-            csvData.shift();
-            //loop through each item in array and save them to appropriate sub-array
-            csvData.forEach(function(entry) {
-              sku = csvData[0];
-              Description = csvData[1];
-              SellableOnHand = csvData[2];
-              OpenPOqty = csvData[3];
-              OneMonthSales = csvData[4];
-              ThreeMonthSales = csvData[5];
-              SixMonthSales = csvData[6];
-              BackOrder = csvData[7];
-              LeadTime = csvData[8];
-              MoQ = csvData[9];
-              FobSH = csvData[10];
-              PackagingType = csvData[11];
-              L_cm = csvData[12];
-              W_cm = csvData[13];
-              H_cm = csvData[14];
-              GW_kg = csvData[15];
-              NW_kg = csvData[16];
-              Carton_qty = csvData[17];
-              Pallet_Dim_cm = csvData[18];
-              Pallet_Ctns = csvData[19];
-              Pallet_qty = csvData[20];
-              Pallet_WG_qty = csvData[21];
-              Shipping_Date = csvData[22];
-              Shipping_PO = csvData[23];
-              Shipping_Qty = csvData[24];
-              Cost_Unit = csvData[25];
-              Shipping_Amt = csvData[26];
-              Shpmt_Received = csvData[27];
-              Shpmt_Date_Received = csvData[28];
-              Vendor = csvData[29];
-              Sales_PO = csvData[30];
-              Sales_Qty = csvData[31];
-              Sales_Date = csvData[32];
-              Sales_Amt = csvData[33];
-            });
-            console.log(sku[0]);
-            console.log(sku);
-            // Open the MySQL connection
-            getConnection().connect((error) => {
-                if (error) {
-                    console.error(error);
-                } else {
-                    let query = 'INSERT INTO TestTable (SKU, Test1, Test2, Test3, Test4, Test5, Test6) VALUES ?';
-                    getConnection().query(query, [csvData], (error, response) => {
-                        console.log(error || response);
-                    });
-                }
-            });
-  // delete file after saving to MySQL database
-  // fs.unlinkSync(filePath)
-          });
-  stream.pipe(csvStream);
-}
-
-app.post("/insertDB", (req, res) => {
-  var csvfile = req.body.csv_file;
-  importCsvData2MySQL(csvfile)
-})
-
-function intializeTables() {
-  var createUSWarehouse = `CREATE TABLE IF NOT EXISTS USWarehouse (
-                              WarehouseId INTEGER auto_increment not null,
-                              SKU INTEGER UNIQUE,
-                              PRIMARY KEY (WarehouseId),
-                              Description varchar(25),
-                              SellableOnHand INTEGER,
-                              OpenPOQuantity INTEGER,
-                              MOQ INTEGER,
-                              LeadTime INTEGER,
-                              BackOrders INTEGER)`;
-
-  // var createTotalSales = `CREATE TABLE IF NOT EXISTS TotalSales (
-  //                           SalesId INTEGER auto_increment not null,
-  //                           PRIMARY KEY (SalesId),
-  //                           OneMonthSales INTEGER,
-  //                           ThreeMonthSales INTEGER,
-  //                           SixMonthSales INTEGER)`;
-
-  var createDimensionTable = `CREATE TABLE IF NOT EXISTS DimensionTable (
-                              DimensionId INTEGER auto_increment not null,
-                              PRIMARY KEY (DimensionId),
-                              SKU INTEGER,
-                              Fob_SH FLOAT,
-                              L_cm INTEGER,
-                              W_cm INTEGER,
-                              H_cm INTEGER,
-                              G_W_kg INTEGER,
-                              N_W_kg INTEGER)`;
-
-  var createPackagingTable = `CREATE TABLE IF NOT EXISTS PackagingTable (
-                              PackagingId INTEGER auto_increment not null,
-                              PRIMARY KEY (PackagingId),
-                              SKU INTEGER,
-                              PackagingType varchar(30),
-                              PalletDim varchar(30),
-                              PalletCtns INTEGER,
-                              PalletQty INTEGER,
-                              PalletWeight INTEGER,
-                              CartonQuantity INTEGER)`;
-
-  var createShippingTable = `CREATE TABLE IF NOT EXISTS ShippingTable (
-                              ShippingId INTEGER auto_increment not null,
-                              PRIMARY KEY (ShippingId),
-                              SKU INTEGER,
-                              ShippingDate varchar(10),
-                              ShippingPONumber INTEGER,
-                              ShippingQty INTEGER,
-                              IncostUnit INTEGER,
-                              ShippingTotalAmt FLOAT,
-                              Received varchar(3),
-                              ShippingDateReceived varchar(10))`;
-
-  var createSalesTable = `CREATE TABLE IF NOT EXISTS SalesTable (
-                              SalesId INTEGER auto_increment not null,
-                              PRIMARY KEY (SalesId),
-                              SKU INTEGER,
-                              Vendor varchar(30),
-                              SalesPONumber INTEGER,
-                              SalesQty INTEGER,
-                              SalesDate varchar(10),
-                              SalesAmt FLOAT)`;
-
-  // var TestTable = 'CREATE TABLE IF NOT EXISTS TestTable (' +
-  //                     'SKU INTEGER UNIQUE,' +
-  //                     'PRIMARY KEY (SKU),' +
-  //                     'Test1 varchar(20),' +
-  //                     'Test2 varchar(20),' +
-  //                     'Test3 varchar(20),' +
-  //                     'Test4 varchar(20),' +
-  //                     'Test5 varchar(20),' +
-  //                     'Test6 varchar(20))';
-
-  getConnection().query(createUSWarehouse, function(err,result) {
-    if (err) {
-      console.log(err);
-    }
-    console.log('USWarehouse Table Created!');
-  });
-  getConnection().query(createDimensionTable, function(err,result) {
-    if (err) {
-      console.log(err);
-    }
-    console.log('Dimension Table Created!');
-  });
-  getConnection().query(createPackagingTable, function(err,result) {
-    if (err) {
-      consol.log(err);
-    }
-    console.log('Packaging Table Created!');
-  });
-  getConnection().query(createShippingTable, function(err,result) {
-    if (err) {
-      console.log(err);
-    }
-    console.log('Shipping Table Created!');
-  });
-  getConnection().query(createSalesTable, function(err,result) {
-    if (err) {
-      console.log(err);
-    }
-    console.log('Sales Table Created!');
-  });
-}
