@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Shipping</title>
+
+    <link rel="stylesheet" type ="text/css" href = "styles/header.css" />
+    <link rel="stylesheet" type ="text/css" href = "styles/sub-pages.css" />
+    <link rel="stylesheet" type ="text/css" href = "styles/home.css"/>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+  </head>
+  <body>
+
+    <% include partials/header.ejs %>
+
+    <div class="title-block">
+      <h2>Shipping Search</h2>
+    </div>
+    <section>
+      <table class="table-data" id="myTable">
+        <tr>
+          <th>SKU</th>
+          <th>Shipping Date</th>
+          <th>Shipping PO Number</th>
+          <th>Shipping Quantity</th>
+          <th>InCost/Unit</th>
+          <th>Shipping Total Amount</th>
+          <th>Received</th>
+          <th>Shipping Date Received</th>
+        </tr>
+        <tr>
+          <td><%= data.SKU %></td>
+          <td><%= data.ShippingDate %></td>
+          <td><%= data.ShippingPONumber %></td>
+          <td><%= data.ShippingQty %></td>
+          <td><%= data.IncostUnit %></td>
+          <td><%= data.ShippingTotalAmt %></td>
+          <td><%= data.Received %></td>
+          <td><%= data.ShippingDateReceived %></td>
+        </tr>
+      </table>
+    </section>
+    <form action="/shipping">
+      <button type="submit" class="small-buttons">Go Back</button>
+    </form>
+  </body>
+</html>

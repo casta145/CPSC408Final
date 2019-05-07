@@ -28,6 +28,31 @@
   box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
 }
 
+.small-buttons {
+  background-color: #f2c43e;
+  border: none;
+  color: black;
+  border-radius: 50px 50px 50px 50px;
+  padding: 8px 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 15px;
+  margin-left: 5px;
+  margin-top: 30px;
+  width: 80px;
+}
+
+.insert-buttons {
+  margin-left: 10px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.delete-buttons {
+
+}
+
 .welcome-block {
   background-color: black;
 }

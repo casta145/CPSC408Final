@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Sales</title>
+
+    <link rel="stylesheet" type ="text/css" href = "styles/header.css" />
+    <link rel="stylesheet" type ="text/css" href = "styles/sub-pages.css" />
+    <link rel="stylesheet" type ="text/css" href = "styles/home.css"/>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+  </head>
+  <body>
+    <% include partials/header.ejs %>
+
+    <div class="title-block">
+      <h2>Sales Search</h2>
+    </div>
+
+    <div class="sales-content">
+      <form class="search-form" id="search-form" action="/sales" method="POST">
+      <label for="skuNumber">Sku Number:</label>
+      <input class="sku-search" id="skuNumber" name="skuNumber" type="text" value="<%= qs.skuNumber %>"/>
+      <label for="shPOnum">PO Number:</label>
+      <input class="sku-search" id="shPOnum" name="sPOnum" type="text" value="<%= qs.sPOnum %>"/>
+      <label for="sVendor">Vendor:</label>
+      <input class="sku-search" id="sVendor" name="sVendor" type="text" value="<%= qs.sVendor %>"/>
+      <input type="submit" value="Submit">
+    </div>
+    <form action="/home">
+      <button type="submit" class="small-buttons">Go Back</button>
+    </form>
+    <%= qs.skuNumber %>
+    <%= qs.sPOnum %>
+    <%= qs.sVendor %>
+    <section>
+      <table id="myTable"> </table>
+    </section>
+  </body>
+</html>

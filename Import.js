@@ -75,15 +75,8 @@ module.exports = {
   //             console.log(error || response);
             });
     stream.pipe(csvStream);
-  },
-
-  // exportCSV: function exportToCSV(){
-  //   var query = "SELECT * FROM USWarehouse INTO OUTFILE 'C:/Desktop/csvFiles/firstAtt.csv' FIELDS ENCLOSED BY '"' TERMINATED BY ';' ESCAPED BY '"' LINES TERMINATED BY '\r\n'";
-  //
-  // }
+  }
 };
-
-
 
 
 // console.log("entering for each loop");

@@ -6,26 +6,36 @@
 
     <link rel="stylesheet" type ="text/css" href = "styles/header.css" />
     <link rel="stylesheet" type ="text/css" href = "styles/sub-pages.css" />
+    <link rel="stylesheet" type ="text/css" href = "styles/home.css"/>
+
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
   </head>
   <body>
-    <div class="header">
-      <a href="https://www.maxxhaul.com/" target="_blank"><img src="imgs/MaxxhaulLogo.png" alt="Maxxhaul Logo" class="logo"></a>
-      <p class="slogan">Manufacturer and Distributor of Towing and Truck Accessories</p>
-    </div>
+    <% include partials/header.ejs %>
+
     <div class="title-block">
       <h2>Shipping Search</h2>
     </div>
 
-    <div class="product-content">
-      <p>SKU Number:</p>
-      <form class="search-form" action="shipping-search" method="POST">
-        <input class="sku-search" name="skuNumber"/>
-        <button>Submit</button>
+    <div class="shipping-content">
+      <form class="search-form" id="search-form" action="/shipping" method="POST">
+      <label for="skuNumber">Sku Number:</label>
+      <input class="sku-search" id="skuNumber" name="skuNumber" type="text" value="<%= qs.skuNumber %>"/>
+      <label for="shPOnum">PO Number:</label>
+      <input class="sku-search" id="shPOnum" name="shPOnum" type="text" value="<%= qs.shPOnum %>"/>
+      <input type="submit" value="Submit">
       </form>
     </div>
+    <form action="/home">
+      <button type="submit" class="small-buttons">Go Back</button>
+    </form>
+    <%= qs.skuNumber %>
+    <%= qs.shPOnum %>
+    <section>
+      <table id="myTable"> </table>
+    </section>
   </body>
 </html>

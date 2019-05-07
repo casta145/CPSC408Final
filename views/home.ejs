@@ -11,10 +11,7 @@
 
   </head>
   <body>
-    <div class="header">
-      <a href="https://www.maxxhaul.com/" target="_blank"><img src="imgs/MaxxhaulLogo.png" alt="Maxxhaul Logo" class="logo"></a>
-      <p class="slogan">Manufacturer and Distributor of Towing and Truck Accessories</p>
-    </div>
+    <% include partials/header.ejs %>
     <div class="welcome-block">
       <h2>Welcome!</h2>
     </div>
@@ -26,23 +23,28 @@
     <div class="container">
       <div class="row">
         <div class="col-sm">
-          <form action="/products.html">
+          <form action="/products">
             <button type="submit" class="large-buttons">Products</button>
           </form>
           <button type="button" class="large-buttons">Sales Reports</button> <br>
         </div>
         <div class="col-sm">
-          <form action="/shipping.html">
+          <form action="/shipping">
             <button type="submit" class="large-buttons">Shipping</button>
           </form>
           <!-- Trigger/Open The Modal -->
           <button id="myBtn" class="large-buttons">Import</button>
         </div>
         <div class="col-sm">
-          <form action="/sales.html">
+          <form action="/sales">
             <button type="submit" class="large-buttons">Sales</button>
+            <!-- <script type="text/javascript" src="Export.js"></script> -->
           </form>
-          <button class="large-buttons" action="">Export</button>
+          <form class ="export-form" action="exportDB" method="POST">
+            <script src = "Export.js"></script>
+            <button class="large-buttons" type="Submit">Export</button>
+          </form>
+          </div>
         </div>
       </div>
     </div>
@@ -64,23 +66,18 @@
     <script>
       // Get the modal
       var modal = document.getElementById('myModal');
-
       // Get the button that opens the modal
       var btn = document.getElementById("myBtn");
-
       // Get the <span> element that closes the modal
       var span = document.getElementsByClassName("close")[0];
-
       // When the user clicks the button, open the modal
       btn.onclick = function() {
         modal.style.display = "block";
         }
-
       // When the user clicks on <span> (x), close the modal
       span.onclick = function() {
         modal.style.display = "none";
         }
-
         // When the user clicks anywhere outside of the modal, close it
         window.onclick = function(event) {
           if (event.target == modal) {

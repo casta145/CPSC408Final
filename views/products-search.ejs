@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Products</title>
+
+    <link rel="stylesheet" type ="text/css" href = "styles/header.css" />
+    <link rel="stylesheet" type ="text/css" href = "styles/sub-pages.css" />
+    <link rel="stylesheet" type ="text/css" href = "styles/home.css"/>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+  </head>
+  <body>
+
+    <% include partials/header.ejs %>
+
+    <div class="title-block">
+      <h2>Product Search</h2>
+    </div>
+    <section>
+      <table class="table-data" id="myTable">
+        <tr>
+          <th>SKU</th>
+          <th>Description</th>
+          <th>Sellable On Hand</th>
+          <th>Open PO Quantity</th>
+          <th>MOQ</th>
+          <th>Lead Time</th>
+          <th>Back Orders</th
+        </tr>
+        <tr>
+          <td><%= data.SKU %></td>
+          <td><%= data.Description %></td>
+          <td><%= data.SellableOnHand %></td>
+          <td><%= data.OpenPOQuantity %></td>
+          <td><%= data.MOQ %></td>
+          <td><%= data.LeadTime %></td>
+          <td><%= data.BackOrders %></td>
+        </tr>
+      </table>
+    </section>
+    <form>
+      <button type="submit" class="small-buttons" action="products">Back</button>
+      <button type="submit" class="small-buttons" action="editProduct">Edit</button>
+    </form>
+  </body>
+</html>

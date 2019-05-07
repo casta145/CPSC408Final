@@ -6,26 +6,41 @@
 
     <link rel="stylesheet" type ="text/css" href = "styles/header.css" />
     <link rel="stylesheet" type ="text/css" href = "styles/sub-pages.css" />
+    <link rel="stylesheet" type ="text/css" href = "styles/home.css"/>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
   </head>
   <body>
-    <div class="header">
-      <a href="https://www.maxxhaul.com/" target="_blank"><img src="imgs/MaxxhaulLogo.png" alt="Maxxhaul Logo" class="logo"></a>
-      <p class="slogan">Manufacturer and Distributor of Towing and Truck Accessories</p>
-    </div>
+
+    <% include partials/header.ejs %>
+
     <div class="title-block">
       <h2>Sales Search</h2>
     </div>
-
-    <div class="sales-content">
-      <p>SKU Number:</p>
-      <form class="search-form" action="sales-search" method="POST">
-        <input class="sku-search" name="skuNumber"/>
-        <button>Submit</button>
-      </form>
-    </div>
+    <section>
+      <table class="table-data" id="myTable">
+        <tr>
+          <th>SKU</th>
+          <th>Vendor</th>
+          <th>Sales PO Number</th>
+          <th>Sales Quantity</th>
+          <th>Sales Date</th>
+          <th>Sales Amount</th>
+        </tr>
+        <tr>
+          <td><%= data.SKU %></td>
+          <td><%= data.Vendor %></td>
+          <td><%= data.SalesPONumber %></td>
+          <td><%= data.SalesQty %></td>
+          <td><%= data.SalesDate %></td>
+          <td><%= data.SalesAmt %></td>
+        </tr>
+      </table>
+    </section>
+    <form action="/sales">
+      <button type="submit" class="small-buttons">Go Back</button>
+    </form>
   </body>
 </html>

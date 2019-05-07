@@ -11,17 +11,20 @@ const fs = require('fs');
 const csv = require('fast-csv');
 const multer = require('multer');
 
+app.set('view engine', 'ejs')
 //functions in other js files
 var conn = require('./dbConnection');
 var create = require('./createTables');
-var importCSV = require('./Import')
+var importCSV = require('./Import');
+var exportCSV = require('./Export');
 
 //outputs our api requests to console to help display what is occuring
 app.use(morgan('short'))
 //this allows access to the any file in the public folder
 app.use(express.static('./public'))
 //this allows us to parse any info we are attemping to collect form the webpage
-app.use(bodyParser.urlencoded({extended: false}))
+//app.use(bodyParser.urlencoded({extended: false}))
+var urlencodedParser = bodyParser.urlencoded({ extended: false});
 
 app.use(session({
 	secret: 'secret',
@@ -30,18 +33,127 @@ app.use(session({
 }));
 
 //localhost 3000
-app.listen(3030, () => {
-  console.log("Server is up and running on 3030...")
-})
+app.listen(3000, () => {
+  console.log("Server is up and running on 3000...")
+});
 
 //this connects to out main page
-app.get("/html/index.html", (req, res) => {
-  console.log("Responding to root route")
-  res.send("Hello from root")
-})
+app.get("/", function(req, res){
+	res.render('index')
+  console.log("rendering login page")
+});
+
+app.get("/products", function(req, res){
+	res.render('products', {qs: req.query});
+	console.log(req.query);
+  console.log("rendering product page")
+});
+
+app.post("/products", urlencodedParser, function(req, res){
+	//console.log(req.body.skuNumber)
+	var sku = req.body.skuNumber;
+	if (sku == "") {
+
+	}else {
+	  const sqlquery = "SELECT * FROM USWarehouse WHERE SKU = ?"
+	  conn.query(sqlquery, [sku],function(error,rows,fields) {
+			// if (data != null){
+				var data = rows[0];
+				res.render('products-search', {data});
+			// }
+		})
+	}
+});
+
+app.post("/deleteProduct",urlencodedParser, function(req,res) {
+	var sku = parseInt(req.body.skuNumber);
+	console.log(sku);
+	if (sku == "") {
+
+	} else {
+	  const sqlquery = 'DELETE FROM USWarehouse WHERE SKU = ?'
+	  conn.query(sqlquery, [sku],function(error,rows,fields) {
+			console.log(sku);
+			console.log("Product Deleted");
+			})
+	}
+});
+
+
+app.get("/shipping", function(req, res){
+	res.render('shipping', {qs: req.query});
+	console.log(req.query);
+  console.log("rendering shipping page");
+});
+
+app.post("/shipping", urlencodedParser, function(req, res){
+	console.log(req.body.skuNumber);
+	console.log(req.body.shPOnum);
+	var sku = req.body.skuNumber;
+	var poNum = req.body.shPOnum;
+	if (sku == "" && poNum == "") {
+
+	} else if (sku != "" && poNum == ""){
+	  const sqlquery = "SELECT * FROM ShippingTable WHERE SKU = ?"
+	  conn.query(sqlquery, [sku],function(error,rows,fields) {
+			console.log(rows[0]);
+			var data = rows[0];
+			res.render('shipping-search', {data});
+			})
+	} else if (sku == "" && poNum != "") {
+		const sqlquery = "SELECT * FROM ShippingTable WHERE ShippingPONumber = ?"
+		conn.query(sqlquery, [poNum], function(error,rows,fields) {
+			console.log(rows[0]);
+			var data = rows[0];
+			res.render('shipping-search', {data});
+		})
+	}
+});
+
+app.get("/sales", function(req, res){
+	res.render('sales', {qs: req.query});
+	console.log(req.query);
+  console.log("rendering sales page")
+});
+
+app.post("/sales", urlencodedParser, function(req, res){
+	console.log(req.body.skuNumber);
+	console.log(req.body.sPOnum);
+	console.log(req.body.sVendor);
+	var sku = req.body.skuNumber;
+	var poNum = req.body.sPOnum;
+	var vendor = req.body.sVendor;
+	if (sku == "" && poNum == "" && vendor == "") {
+
+	} else if (sku != "" && poNum == "" && vendor == ""){
+	  const sqlquery = "SELECT * FROM SalesTable WHERE SKU = ?"
+	  conn.query(sqlquery, [sku],function(error,rows,fields) {
+			console.log(rows[0]);
+			var data = rows[0];
+			res.render('sales-search', {data});
+			})
+	} else if (sku == "" && poNum != "" && vendor == "") {
+		const sqlquery = "SELECT * FROM SalesTable WHERE SalesPONumber = ?"
+		conn.query(sqlquery, [poNum], function(error,rows,fields) {
+			console.log(rows[0]);
+			var data = rows[0];
+			res.render('sales-search', {data});
+		})
+	} else if (sku == "" && poNum == "" && vendor != "") {
+		const sqlquery = "SELECT * FROM SalesTable WHERE Vendor = ?"
+		conn.query(sqlquery, [vendor], function(error,rows,fields) {
+			console.log(rows[0]);
+			var data = rows[0];
+			res.render('sales-search', {data});
+		})
+	}
+});
+
 
 //authenticates uers credentials before login
-app.post('/auth', function(request, response) {
+app.post('/home-page', urlencodedParser,function(request, response) {
+	console.log(request.body)
+
 	var email = request.body.email;
 	var password = request.body.password;
 	if (email && password) {
@@ -50,9 +162,9 @@ app.post('/auth', function(request, response) {
 				request.session.loggedin = true;
 				request.session.email = email;
         create;
-				response.redirect('/home.html');
+				response.render('home');
 			} else {
-        response.redirect('/index.html')
+        response.render('index')
         //response.send('Incorrect Email and/or Password!');
 			}
 			response.end();
@@ -64,51 +176,56 @@ app.post('/auth', function(request, response) {
 });
 
 //routes to home page
-app.get('/home.html', function(request, response) {
-	if (request.session.loggedin) {
-		//response.send('Welcome back!');
-	} else {
-		response.send('Please login to view this page!');
-	}
-	response.end();
+app.get('/home', function(request, response) {
+		response.render('home');
 });
 
 app.post("/insertDB", (req, res) => {
   var csvfile = req.body.csv_file;
   //importCsvData2MySQL(csvfile);
   importCSV.import(csvfile);
-})
+});
 
 app.post("/exportDB", (req, res) => {
-  importCSV.exportCSV();
-})
+  exportCSV.import();
+});
 
-function processFile() {
-  var theFile = document.getElementById("myFile");
-  console.log(theFile);
-  var table = document.getElementById("myTable");
-  //var headerLine = "";
+app.post("/insertRecord", urlencodedParser,(req,res) => {
+	var sku = parseInt(req.body.skuNumber);
+	var description = String(req.body.description);
+	var sellable = parseInt(req.body.sellable);
+	var poNumber = parseInt(req.body.openPO);
+	var moq =  parseInt(req.body.moq);
+	var leadtime =  parseInt(req.body.leadtime);
+	var backorder =  parseInt(req.body.bkorder);
+	var insert = [[sku,description,sellable,poNumber,moq,leadtime,backorder]];
+	const sqlquery = "INSERT INTO USWarehouse (SKU, Description, SellableOnHand, OpenPOQuantity, MOQ, LeadTime, BackOrders) VALUES ?";
+	conn.query(sqlquery, [insert],function(error,rows,fields) {
+		console.log(error);
+		var data = rows;
+		//console.log(data);
+		// res.render('shipping-search', {data});
+	})
+		// console.log(sku);
+});
 
-  const sqlquery = "SELECT * FROM USWarehouse WHERE SKU = ?"
-  conn.query(sqlquery, [sku],function(error,rows,fields){
-    var rowContent = res.json(rows);
-    var cellElement = document.createElement("th");
-    var cellElement = document.createElement("td");
-    var cellContent = document.createTextNode(rowContent[0]);
-    cellElement.appendChild(cellContent);
-    row.appendChild(cellElement);
-    myTable.appendChild(row);
-  })
- return false;
-}
-
-app.post('/product-search', (req, res) => {
-  var sku = req.body.skuNumber;
-  const sqlquery = "SELECT * FROM USWarehouse WHERE SKU = ?"
-  conn.query(sqlquery, [sku],function(error,rows,fields) {
-    res.json(rows);
-    // var elm = document.getElementById('results').
-  })
+app.post("/editProduct", urlencodedParser,(req,res) => {
+	var sku = parseInt(req.body.skuNumber);
+	var description = String(req.body.description);
+	var sellable = parseInt(req.body.sellable);
+	var poNumber = parseInt(req.body.openPO);
+	var moq =  parseInt(req.body.moq);
+	var leadtime =  parseInt(req.body.leadtime);
+	var backorder =  parseInt(req.body.bkorder);
+	var insert = [[sku,description,sellable,poNumber,moq,leadtime,backorder]];
+	const sqlquery = "INSERT INTO USWarehouse (SKU, Description, SellableOnHand, OpenPOQuantity, MOQ, LeadTime, BackOrders) VALUES ?";
+	conn.query(sqlquery, [insert],function(error,rows,fields) {
+		console.log(error);
+		var data = rows;
+		//console.log(data);
+		// res.render('shipping-search', {data});
+	})
+		// console.log(sku);
 });
 
 // app.get('/product-search', (req, res) => {

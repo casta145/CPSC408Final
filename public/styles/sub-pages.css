@@ -5,3 +5,32 @@
 .title-block h2 {
   color: white;
 }
+
+/* .containter {
+  margin-top: 1%;
+}
+
+.row {
+  margin-top: 1%;
+
+} */
+
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 18px;
+  text-align: center;
+}
+
+table#myTable tr:nth-child(even) {
+  background-color: #eee;
+}
+table#myTable tr:nth-child(odd) {
+ background-color: #fff;
+}
+table#myTable th {
+  background-color: black;
+  color: white;
+}
