@@ -4,14 +4,15 @@
     <meta charset="utf-8">
     <title>Products</title>
 
-    <link rel="stylesheet" type ="text/css" href = "css/header.css" />
-    <link rel="stylesheet" type ="text/css" href = "css/sub-pages.css" />
+    <link rel="stylesheet" type ="text/css" href = "styles/header.css" />
+    <link rel="stylesheet" type ="text/css" href = "styles/sub-pages.css" />
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
   </head>
   <body>
+
     <div class="header">
       <a href="https://www.maxxhaul.com/" target="_blank"><img src="imgs/MaxxhaulLogo.png" alt="Maxxhaul Logo" class="logo"></a>
       <p class="slogan">Manufacturer and Distributor of Towing and Truck Accessories</p>
@@ -22,20 +23,31 @@
 
     <div class="product-content">
       <p>SKU Number:</p>
-      <form class="search-form" action="product-search" method="post">
-        <input class="sku-search" name="skuNumber"/>
-        <button>Submit</button>
+
+      <form class="search-form" onsubmit="return processFile()" action="#" id="aForm" method="POST">
+
+      <!-- <form class="search-form" method="post"> -->
+      <input class="sku-search" id="myFile" name="skuNumber"/>
+      <input type="submit" name="submitMe">
+
+      <!-- <button>Submit</button> -->
       </form>
+
+
+      <!--
+      <form class="search-form" action="product-search" id="aForm" method="POST">
+
+      <form class="search-form" method="post">
+      <input class="sku-search" id="myFile" name="skuNumber"/>
+
+      <input type="submit" name="submitMe"> onsubmit="return processFile()"
+
+      <button>Submit</button>
+      </form>
+      -->
     </div>
+    <section>
+      <table id="myTable"> </table>
+    </section>
+
 </html>
-
-
-
-
-<!-- <script type="text/javascript">
-  var table = document.getElementById("myTable");
-  getConnection().query('SELECT * FROM SalesTable', function(error, results, fields) {
-  myTable.appendChild(results);
-  console.log("Should have printed in output")
-  })
-</script> -->

@@ -20,7 +20,6 @@ var importCSV = require('./Import')
 app.use(morgan('short'))
 //this allows access to the any file in the public folder
 app.use(express.static('./public'))
-app.use(express.static('./public/html'))
 //this allows us to parse any info we are attemping to collect form the webpage
 app.use(bodyParser.urlencoded({extended: false}))
 
@@ -80,23 +79,46 @@ app.post("/insertDB", (req, res) => {
   importCSV.import(csvfile);
 })
 
-// function skuSearch() {
-//   var sqlquery = "SELECT * FROM SalesTable";
-//   conn.query(sqlquery, function(error,res,fields){
-//
-//   })
-//   console.log(res);
-// }
+app.post("/exportDB", (req, res) => {
+  importCSV.exportCSV();
+})
+
+function processFile() {
+  var theFile = document.getElementById("myFile");
+  console.log(theFile);
+  var table = document.getElementById("myTable");
+  //var headerLine = "";
+
+  const sqlquery = "SELECT * FROM USWarehouse WHERE SKU = ?"
+  conn.query(sqlquery, [sku],function(error,rows,fields){
+    var rowContent = res.json(rows);
+    var cellElement = document.createElement("th");
+    var cellElement = document.createElement("td");
+    var cellContent = document.createTextNode(rowContent[0]);
+    cellElement.appendChild(cellContent);
+    row.appendChild(cellElement);
+    myTable.appendChild(row);
+  })
+ return false;
+}
 
 app.post('/product-search', (req, res) => {
-  console.log("Should have printed in output");
   var sku = req.body.skuNumber;
   const sqlquery = "SELECT * FROM USWarehouse WHERE SKU = ?"
   conn.query(sqlquery, [sku],function(error,rows,fields) {
     res.json(rows);
+    // var elm = document.getElementById('results').
   })
 });
 
+// app.get('/product-search', (req, res) => {
+//   console.log("Should have printed in output");
+//   var sku = req.body.skuNumber;
+//   const sqlquery = "SELECT * FROM USWarehouse WHERE SKU = ?"
+//   conn.query(sqlquery, [sku],function(error,rows,fields) {
+//     res.json(rows);
+//   })
+// });
 
 // // -> Import CSV File to MySQL database
 // function importCsvData2MySQL(filePath){

@@ -2,10 +2,11 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Login Page</title>
-    <link rel="stylesheet" type ="text/css" href = "css/main.css" />
-    <link rel="stylesheet" type ="text/css" href = "css/header.css" />
-    <!--bootstrap-->
+    <title>Shipping</title>
+
+    <link rel="stylesheet" type ="text/css" href = "styles/header.css" />
+    <link rel="stylesheet" type ="text/css" href = "styles/sub-pages.css" />
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
@@ -15,17 +16,16 @@
       <a href="https://www.maxxhaul.com/" target="_blank"><img src="imgs/MaxxhaulLogo.png" alt="Maxxhaul Logo" class="logo"></a>
       <p class="slogan">Manufacturer and Distributor of Towing and Truck Accessories</p>
     </div>
-    <div class="index-content">
-      <p class="name">Maxxhaul <i>Inventory Database</i></p>
-<!-- Need to create an action that links to the database to make sure that the credentials checkout-->
-      <form class="login-form" action="auth" method="POST">
-        <input class="userName" placeholder="email" name="email"/>
-        <input class="passWord" placeholder="password" name="password"/>
+    <div class="title-block">
+      <h2>Shipping Search</h2>
+    </div>
+
+    <div class="product-content">
+      <p>SKU Number:</p>
+      <form class="search-form" action="shipping-search" method="POST">
+        <input class="sku-search" name="skuNumber"/>
         <button>Submit</button>
       </form>
-
-      <a href="/form.html" class="login-button"><b>Login</b></a>
-
     </div>
   </body>
 </html>
