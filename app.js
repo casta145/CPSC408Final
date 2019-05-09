@@ -38,55 +38,65 @@ app.listen(3000, () => {
 });
 
 //this connects to out main page
-app.get("/", function(req, res){
+app.get("/",function(req, res){
 	res.render('index')
   console.log("rendering login page")
 });
 
-app.get("/products", function(req, res){
+app.get("/products",function(req, res){
 	res.render('products', {qs: req.query});
-	console.log(req.query);
-  console.log("rendering product page")
+	// console.log(req.query);
+  // console.log("rendering product page")
 });
 
-app.post("/products", urlencodedParser, function(req, res){
-	//console.log(req.body.skuNumber)
+app.post("/products",urlencodedParser,function(req, res){
+	// console.log(req.body.skuNumber)
 	var sku = req.body.skuNumber;
 	if (sku == "") {
-
+		//res.status(500).send('<script>alert("help")</script>');
+		console.log('no sku input');
+		res.redirect('/products');
 	}else {
 	  const sqlquery = "SELECT * FROM USWarehouse WHERE SKU = ?"
 	  conn.query(sqlquery, [sku],function(error,rows,fields) {
-			// if (data != null){
 				var data = rows[0];
-				res.render('products-search', {data});
-			// }
+				if (data == "" || data == null){
+					console.log("query empty");
+					res.redirect('/products');
+				} else {
+					res.render('products-search', {data});
+				}
 		})
 	}
 });
 
 app.post("/deleteProduct",urlencodedParser, function(req,res) {
 	var sku = parseInt(req.body.skuNumber);
-	console.log(sku);
+	// console.log(sku);
 	if (sku == "") {
-
+		res.redirect('/product');
 	} else {
 	  const sqlquery = 'DELETE FROM USWarehouse WHERE SKU = ?'
 	  conn.query(sqlquery, [sku],function(error,rows,fields) {
-			console.log(sku);
+			// console.log(sku);
 			console.log("Product Deleted");
+			res.redirect('/product');
 			})
 	}
 });
 
+app.post("/editProduct",urlencodedParser,function(req,res) {
+	var sku = parseInt(req.body.skuNumber);
+	console.log(sku);
+});
 
-app.get("/shipping", function(req, res){
+app.get("/shipping",function(req, res){
 	res.render('shipping', {qs: req.query});
 	console.log(req.query);
   console.log("rendering shipping page");
 });
 
-app.post("/shipping", urlencodedParser, function(req, res){
+app.post("/shipping",urlencodedParser,function(req, res){
 	console.log(req.body.skuNumber);
 	console.log(req.body.shPOnum);
 	var sku = req.body.skuNumber;
@@ -110,13 +120,48 @@ app.post("/shipping", urlencodedParser, function(req, res){
 	}
 });
 
-app.get("/sales", function(req, res){
+app.post("/insertshipping", urlencodedParser, function(req, res){
+	var sku = parseInt(req.body.skuNumber);
+	var shippingdate = String(req.body.shippingdate);
+	var shippingpo = parseInt(req.body.shippingpo);
+	var shippingqty = parseInt(req.body.shippingqty);
+	var incostperunit = parseInt(req.body.incostperunit);
+	var shiptotalamount = parseFloat(req.body.shiptotalamount);
+	var received = String(req.body.received);
+	var ShippingDateReceived = String(req.body.ShippingDateReceived);
+	var insertship = [[sku,shippingdate,shippingpo,shippingqty,incostperunit,shiptotalamount,received,ShippingDateReceived]];
+	const sqlqueries = "INSERT INTO ShippingTable (SKU, ShippingDate, ShippingPONumber, ShippingQty, IncostUnit, ShippingTotalAmt, Received, ShippingDateReceived) VALUES ?";
+		conn.query(sqlqueries, [insertship],function(error,rows,fields) {
+			console.log(error);
+			var data = rows;
+			//console.log(data);
+			// res.render('shipping-search', {data});
+		})
+		// console.log(sku);
+});
+
+app.post("/deleteShipping",urlencodedParser, function(req,res) {
+var sku = parseInt(req.body.skuNumber);
+	console.log(sku);
+	if (sku == "") {
+		res.redirect('/shipping');
+	} else {
+  	const sqlquery = 'DELETE FROM ShippingTable WHERE SKU = ?'
+  	conn.query(sqlquery, [sku],function(error,rows,fields) {
+			// console.log(sku);
+			console.log("Product Deleted");
+			res.redirect('/shipping');
+		})
+	}
+});
+
+app.get("/sales",function(req, res){
 	res.render('sales', {qs: req.query});
 	console.log(req.query);
   console.log("rendering sales page")
 });
 
-app.post("/sales", urlencodedParser, function(req, res){
+app.post("/sales",urlencodedParser,function(req, res){
 	console.log(req.body.skuNumber);
 	console.log(req.body.sPOnum);
 	console.log(req.body.sVendor);
@@ -148,10 +193,8 @@ app.post("/sales", urlencodedParser, function(req, res){
 		})
 	}
 });
-
-
 //authenticates uers credentials before login
-app.post('/home-page', urlencodedParser,function(request, response) {
+app.post('/home-page',urlencodedParser,function(request, response) {
 	console.log(request.body)
 
 	var email = request.body.email;
@@ -174,23 +217,23 @@ app.post('/home-page', urlencodedParser,function(request, response) {
 		response.end();
 	}
 });
-
 //routes to home page
-app.get('/home', function(request, response) {
+app.get('/home',function(request, response) {
 		response.render('home');
 });
 
-app.post("/insertDB", (req, res) => {
+app.post("/importDB",(req, res) => {
   var csvfile = req.body.csv_file;
+	console.log(csvfile);
   //importCsvData2MySQL(csvfile);
   importCSV.import(csvfile);
 });
 
-app.post("/exportDB", (req, res) => {
+app.post("/exportDB",(req, res) => {
   exportCSV.import();
 });
 
-app.post("/insertRecord", urlencodedParser,(req,res) => {
+app.post("/insertRecord",urlencodedParser,(req,res) => {
 	var sku = parseInt(req.body.skuNumber);
 	var description = String(req.body.description);
 	var sellable = parseInt(req.body.sellable);
@@ -209,24 +252,24 @@ app.post("/insertRecord", urlencodedParser,(req,res) => {
 		// console.log(sku);
 });
 
-app.post("/editProduct", urlencodedParser,(req,res) => {
-	var sku = parseInt(req.body.skuNumber);
-	var description = String(req.body.description);
-	var sellable = parseInt(req.body.sellable);
-	var poNumber = parseInt(req.body.openPO);
-	var moq =  parseInt(req.body.moq);
-	var leadtime =  parseInt(req.body.leadtime);
-	var backorder =  parseInt(req.body.bkorder);
-	var insert = [[sku,description,sellable,poNumber,moq,leadtime,backorder]];
-	const sqlquery = "INSERT INTO USWarehouse (SKU, Description, SellableOnHand, OpenPOQuantity, MOQ, LeadTime, BackOrders) VALUES ?";
-	conn.query(sqlquery, [insert],function(error,rows,fields) {
-		console.log(error);
-		var data = rows;
-		//console.log(data);
-		// res.render('shipping-search', {data});
-	})
-		// console.log(sku);
-});
+// app.post("/editProduct",urlencodedParser,(req,res) => {
+// 	var sku = parseInt(req.body.skuNumber);
+// 	var description = String(req.body.description);
+// 	var sellable = parseInt(req.body.sellable);
+// 	var poNumber = parseInt(req.body.openPO);
+// 	var moq =  parseInt(req.body.moq);
+// 	var leadtime =  parseInt(req.body.leadtime);
+// 	var backorder =  parseInt(req.body.bkorder);
+// 	var insert = [[sku,description,sellable,poNumber,moq,leadtime,backorder]];
+// 	const sqlquery = "INSERT INTO USWarehouse (SKU, Description, SellableOnHand, OpenPOQuantity, MOQ, LeadTime, BackOrders) VALUES ?";
+// 	conn.query(sqlquery, [insert],function(error,rows,fields) {
+// 		console.log(error);
+// 		var data = rows;
+// 		//console.log(data);
+// 		// res.render('shipping-search', {data});
+// 	})
+// 		// console.log(sku);
+// });
 
 // app.get('/product-search', (req, res) => {
 //   console.log("Should have printed in output");

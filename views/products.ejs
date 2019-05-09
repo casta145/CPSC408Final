@@ -26,28 +26,23 @@
       <!-- <form class="search-form" method="post"> -->
       <label for="skuNumber">Sku Number:</label>
       <input class="sku-search" id="skuNumber" name="skuNumber" type="text" value="<%= qs.skuNumber %>" placeholder="Enter SKU"/>
-      <input type="submit" value="Submit">
+      <input type="submit" value="Search">
       <!-- <button>Submit</button> -->
       </form>
       <div class="insertToDB">
         <!-- Trigger/Open The Modal -->
         <label for="insertBtn">Create New Record:</label>
-        <button id="insertBtn" class="insert-buttons">INSERT</button>
+        <button id="insertBtn" class="insert-buttons">Insert</button>
       </div>
       <form class="search-form" id="search-form" action="/deleteProduct" method="POST">
         <label for="skuNumber">Delete Product:</label>
         <input class="sku-search" id="skuNumber" name="skuNumber" type="text" value="<%= qs.skuNumber %>" placeholder="Enter SKU"/>
-        <input type="submit" value="Submit">
+        <input type="submit" value="Delete">
       </form>
-      <!-- <div class="deleteProduct">
-        <label for "deleteProduct">Delete Product:</label>
-        <button id="deleteProduct" class="insert-buttons">DELETE</button>
-      </div>
-      <div> -->
         <form action="/home">
           <button type="submit" class="small-buttons">Go Back</button>
         </form>
-      </div>
+      <!-- </div> -->
 
     </div>
     <%= qs.skuNumber %>
@@ -70,7 +65,7 @@
           <input action="insertRecord" name="moq" type= "text" id ="moq" placeholder="MOQ" value="<%= qs.moq %>">
           <input action="insertRecord" name="leadtime" type= "text" id ="leadtime"  placeholder="Lead Time" value="<%= qs.leadtime %>">
           <input action="insertRecord" name="bkorder" type= "text" id ="bkorder" placeholder="Back Orders" value="<%= qs.bkorder %>">
-          <button class="insert-buttons">Submit</button>
+          <button id = "closebtn" class="insert-buttons">Insert</button>
         </form>
       </div>
     </div>
@@ -88,6 +83,8 @@
       var btn = document.getElementById("insertBtn");
       // Get the <span> element that closes the modal
       var span = document.getElementsByClassName("close")[0];
+      // After submit button is hit, it triggers the modal to close
+      var close = document.getElementById("closebtn");
       // When the user clicks the button, open the modal
       btn.onclick = function() {
         modal.style.display = "block";
@@ -101,6 +98,9 @@
           if (event.target == modal) {
             modal.style.display = "none";
           }
+        }
+        close.onclick = function(){
+          modal.style.display = "none";
         }
       </script>
   </body>

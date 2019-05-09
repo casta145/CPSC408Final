@@ -28,7 +28,7 @@
           <th>Open PO Quantity</th>
           <th>MOQ</th>
           <th>Lead Time</th>
-          <th>Back Orders</th
+          <th>Back Orders</th>
         </tr>
         <tr>
           <td><%= data.SKU %></td>
@@ -43,7 +43,57 @@
     </section>
     <form>
       <button type="submit" class="small-buttons" action="products">Back</button>
-      <button type="submit" class="small-buttons" action="editProduct">Edit</button>
     </form>
+    <button id="editbtn" class="small-buttons">Edit</button>
+
+
+    <section>
+      <table id="myTable"> </table>
+    </section>
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+    <!-- Modal content -->
+      <div class="modal-content">
+        <span class="ship">&times;</span>
+        <p>Update Data for Item:</p>
+        <form class="submit-form" action="editProduct" method="POST">
+          <input action="editProduct" name="skuNumber" type= "text" id ="skuNumber" placeholder="SKU" value="<%= data.SKU %>"/>
+          <input action="editProduct" name="description" type= "text" id ="description" placeholder="Description" value="<%= data.Description %>"/>
+          <input action="editProduct" name="sellable" type= "text" id ="sellable" placeholder="Sellable On Hand" value="<%= data.SellableOnHand %>"/>
+          <input action="editProduct" name="openPO" type= "text" id ="openPO" placeholder="Open PO Qty" value="<%= data.OpenPOQuantity %>"/>
+          <input action="editProduct" name="moq" type= "text" id ="moq" placeholder="MOQ" value="<%= data.MOQ %>"/>
+          <input action="editProduct" name="leadtime" type= "text" id ="leadtime"  placeholder="Lead Time" value="<%= data.leadtime %>"/>
+          <input action="editProduct" name="bkorder" type= "text" id ="bkorder" placeholder="Back Orders" value="<%= data.bkorder %>"/>
+          <button id = "closebtn" class="insert-buttons">Update</button>
+        </form>
+      </div>
+    </div>
+    <script>
+      // Get the modal
+      var modal = document.getElementById('myModal');
+      // Get the button that opens the modal
+      var btn = document.getElementById("editbtn");
+      // Get the <span> element that closes the modal
+      var span = document.getElementsByClassName("ship")[0];
+      // After submit button is hit, it triggers the modal to close
+      var close = document.getElementById("closebtn");
+      // When the user clicks the button, open the modal
+      btn.onclick = function() {
+        modal.style.display = "block";
+        }
+      // When the user clicks on <span> (x), close the modal
+      span.onclick = function() {
+        modal.style.display = "none";
+        }
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
+        close.onclick = function(){
+          modal.style.display = "none";
+        }
+      </script>
   </body>
 </html>

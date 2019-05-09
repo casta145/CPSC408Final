@@ -51,13 +51,12 @@
 
     <!-- The Modal -->
     <div id="myModal" class="modal">
-
     <!-- Modal content -->
       <div class="modal-content">
         <span class="close">&times;</span>
         <p>Choose a file to import:</p>
-        <form class="submit-form" action="insertDB" method="POST">
-          <input action="insertDB" name="csv_file" type= "file" id ="csv" accept=".csv">
+        <form class="import-form" action="/importDB" method="POST">
+          <input action="/importDB" name="csv_file" type= "file" id ="csv" accept=".csv">
           <button>Submit</button>
         </form>
       </div>

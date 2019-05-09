@@ -28,14 +28,81 @@
       <input class="sku-search" id="shPOnum" name="shPOnum" type="text" value="<%= qs.shPOnum %>"/>
       <input type="submit" value="Submit">
       </form>
-    </div>
-    <form action="/home">
-      <button type="submit" class="small-buttons">Go Back</button>
-    </form>
+
+        <div class="inserttoDB">
+            <label for="insertBtn">Create New Record:</label>
+            <button id="insertBtn" class="insert-buttons">INSERT</button>
+        </div>
+        <form class="search-form" id="search-form" action="/deleteShipping" method="POST">
+          <label for="skuNumber">Delete Product:</label>
+          <input class="sku-search" id="skuNumber" name="skuNumber" type="text" value="<%= qs.skuNumber %>" placeholder="Enter SKU"/>
+          <input type="submit" value="Submit">
+        </form>
+          <form action="/home">
+          <button type="submit" class="small-buttons">Go Back</button>
+        </form>
+      </div>
     <%= qs.skuNumber %>
     <%= qs.shPOnum %>
     <section>
       <table id="myTable"> </table>
     </section>
+
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+    <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Enter Data for New Shipping Record:</p>
+        <form class="submit-form" action="insertshipping" method="POST">
+          <input action="insertshipping" name="skuNumber" type= "text" id ="skuNumber" placeholder="SKU" value="<%= qs.skuNumber %>">
+          <input action="insertshipping" name="shippingdate" type= "text" id ="shippingdate" placeholder="ShippingDate" value="<%= qs.ShippingDate %>">
+          <input action="insertshipping" name="shippingpo" type= "text" id ="shippingpo" placeholder="ShippingPONumber" value="<%= qs.Shipping_Po %>">
+          <input action="insertshipping" name="shippingqty" type= "text" id ="shippingqty" placeholder="ShippingQty" value="<%= qs.shippingqty %>">
+          <input action="insertshipping" name="incostperunit" type= "text" id ="incostperunit" placeholder="IncostUnit" value="<%= qs.IncostUnit %>">
+          <input action="insertshipping" name="shiptotalamount" type= "text" id ="shippingtotalamount"  placeholder="ShippingTotalAmt" value="<%= qs.ShipTotalAmount %>">
+          <input action="insertshipping" name="received" type= "text" id ="received" placeholder="Received" value="<%= qs.received %>">
+          <input action="insertshipping" name="ShippingDateReceived" type= "text" id ="ShippingDateReceived" placeholder="ShippingDateReceived" value="<%= qs.ShippingDateReceived %>">
+          <button id = "closebtn" class="insert-buttons">Submit</button>
+        </form>
+      </div>
+    </div>
+    <%= qs.skuNumber %>
+    <%= qs.ShippingDate %>
+    <%= qs.Shipping_Po %>
+    <%= qs.shippingqty %>
+    <%= qs.IncostUnit %>
+    <%= qs.ShipTotalAmount%>
+    <%= qs.received %>
+    <%= qs.ShippingDateReceived %>
+    <script>
+      // Get the modal
+      var modal = document.getElementById('myModal');
+      // Get the button that opens the modal
+      var btn = document.getElementById("insertBtn");
+      // Get the <span> element that closes the modal
+      var span = document.getElementsByClassName("close")[0];
+      // After submit button is hit, it triggers the modal to close
+      var close = document.getElementById("closebtn");
+      // When the user clicks the button, open the modal
+      btn.onclick = function() {
+        modal.style.display = "block";
+        }
+      // When the user clicks on <span> (x), close the modal
+      span.onclick = function() {
+        modal.style.display = "none";
+        }
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
+        close.onclick = function(){
+          modal.style.display = "none";
+        }
+      </script>
   </body>
 </html>

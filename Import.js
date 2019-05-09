@@ -53,26 +53,28 @@ module.exports = {
               // Remove Header ROW
               csvData.shift();
 
-              sku = parseInt(csvData[0]);
-              Description = String(csvData[1]);
-              SellableOnHand = parseInt(csvData[2]);
-              OpenPOqty = parseInt(csvData[3]);
-              // OneMonthSales = parseInt(csvData[4]);
-              // ThreeMonthSales = parseInt(csvData[5]);
-              // SixMonthSales = parseInt(csvData[6]);
-              BackOrder = parseInt(csvData[7]);
-              LeadTime = parseInt(csvData[8]);
-              MoQ = parseInt(csvData[9]);
-              // var query = "INSERT INTO TestTable (SKU, Test1, Test2, Test3, Test4, Test5, Test6) VALUES ?";
-              var query = 'INSERT INTO USWarehouse (SKU, Description, SellableOnHand, OpenPOQuantity, MOQ, LeadTime, BackOrders) VALUES ?,?,?,?,?,?,?'
-              conn.query(query, [sku,Description,SellableOnHand,OpenPOqty,MoQ, LeadTime, BackOrder], (error,response) => {
-                console.log(error || response);
+          //     sku = parseInt(csvData[0]);
+          //     Description = String(csvData[1]);
+          //     SellableOnHand = parseInt(csvData[2]);
+          //     OpenPOqty = parseInt(csvData[3]);
+          //     // OneMonthSales = parseInt(csvData[4]);
+          //     // ThreeMonthSales = parseInt(csvData[5]);
+          //     // SixMonthSales = parseInt(csvData[6]);
+          //     BackOrder = parseInt(csvData[7]);
+          //     LeadTime = parseInt(csvData[8]);
+          //     MoQ = parseInt(csvData[9]);
+          //     var query = "INSERT INTO TestTable (SKU, Test1, Test2, Test3, Test4, Test5, Test6) VALUES ?";
+          //     var query = 'INSERT INTO USWarehouse (SKU, Description, SellableOnHand, OpenPOQuantity, MOQ, LeadTime, BackOrders) VALUES ?,?,?,?,?,?,?'
+          //     conn.query(query, [sku,Description,SellableOnHand,OpenPOqty,MoQ, LeadTime, BackOrder], (error,response) => {
+          //       console.log(error || response);
           });
+
+          console.log("import successful");
   //         Open the MySQL connection
   //           var query = "INSERT INTO TestTable (SKU, Test1, Test2, Test3, Test4, Test5, Test6) VALUES ?,?,?,?,?,?,?";
-  //           // var query = 'INSERT INTO USWarehouse (SKU, Description, SellableOnHand, OpenPOQuantity, MOQ, LeadTime, BackOrders) VALUES ?'
-  //           conn.query(query, [csvData], (error,response) => {
-  //             console.log(error || response);
+            var query = 'INSERT INTO USWarehouse (SKU, Description, SellableOnHand, OpenPOQuantity, MOQ, LeadTime, BackOrders) VALUES ?'
+            conn.query(query, [csvData], (error,response) => {
+              console.log(error || response);
             });
     stream.pipe(csvStream);
   }
