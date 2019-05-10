@@ -43,12 +43,14 @@ app.get("/",function(req, res){
   console.log("rendering login page")
 });
 
+//Establishes the connection to the products page to receive data
 app.get("/products",function(req, res){
 	res.render('products', {qs: req.query});
 	// console.log(req.query);
   // console.log("rendering product page")
 });
 
+//For search function, grabs sku to search within database
 app.post("/products",urlencodedParser,function(req, res){
 	// console.log(req.body.skuNumber)
 	var sku = req.body.skuNumber;
@@ -70,56 +72,107 @@ app.post("/products",urlencodedParser,function(req, res){
 	}
 });
 
+//Grabs data entered and inserts new record into database
+app.post("/insertRecord",urlencodedParser,(req,res) => {
+	var sku = parseInt(req.body.skuNumber);
+	var description = String(req.body.description);
+	var sellable = parseInt(req.body.sellable);
+	var poNumber = parseInt(req.body.openPO);
+	var moq =  parseInt(req.body.moq);
+	var leadtime =  parseInt(req.body.leadtime);
+	var backorder =  parseInt(req.body.bkorder);
+	if (sku != "" && description != "" && sellable != "" && poNumber != "" && moq != "" && leadtime != "" && backorder != "") {
+		var insert = [[sku,description,sellable,poNumber,moq,leadtime,backorder]];
+		const sqlquery = "INSERT INTO USWarehouse (SKU, Description, SellableOnHand, OpenPOQuantity, MOQ, LeadTime, BackOrders) VALUES ?";
+		conn.query(sqlquery, [insert],function(error,rows,fields) {
+			console.log(error);
+			console.log('Product Inserted');
+		})
+	} else {
+		res.redirect('/products');
+	}
+		// console.log(sku);
+});
+
+//it doesnt do the checks the way it should, still deletes but if null input it deletes nothing, it does not break anything
 app.post("/deleteProduct",urlencodedParser, function(req,res) {
 	var sku = parseInt(req.body.skuNumber);
-	// console.log(sku);
-	if (sku == "") {
-		res.redirect('/product');
-	} else {
-	  const sqlquery = 'DELETE FROM USWarehouse WHERE SKU = ?'
-	  conn.query(sqlquery, [sku],function(error,rows,fields) {
-			// console.log(sku);
+  const sqlquery = 'DELETE FROM USWarehouse WHERE SKU = ?'
+  conn.query(sqlquery, [sku],function(error,rows,fields) {
+		var data = rows;
 			console.log("Product Deleted");
-			res.redirect('/product');
-			})
-	}
+			res.redirect('/products');
+		})
 });
 
+//Popup box that allows user to update everything but the sku
 app.post("/editProduct",urlencodedParser,function(req,res) {
 	var sku = parseInt(req.body.skuNumber);
-	console.log(sku);
+	var description = String(req.body.description);
+	var sellable = parseInt(req.body.sellable);
+	var poNumber = parseInt(req.body.openPO);
+	var moq =  parseInt(req.body.moq);
+	var leadtime =  parseInt(req.body.leadtime);
+	var backorder =  parseInt(req.body.bkorder);
+		if (sku != "" & description != "" && sellable != "" && poNumber != "" && moq != "" && leadtime != "" && backorder !="") {
+			//var update = [sku];
+			var values = [[description, sellable,poNumber,moq,leadtime,backorder]]
+			var sku = [sku];
+			//const query = "UPDATE USWarehouse SET Description = "+ description + " SET SellableOnHand = " + sellable + " SET OpenPOQuantity = "+ poNumber + " SET MOQ = " + moq + " SET LeadTime = "+ leadtime + " SET BackOrders = "+ backorder + " WHERE SKU = ?"
+			const query = "UPDATE USWarehouse SET Description = ?,SellableOnHand = ?,OpenPOQuantity = ?,MOQ = ?,LeadTime = ?,BackOrders = ? WHERE SKU = ?";
+			//conn.query(query, [update],function(error,rows,fields) {
+			// conn.query('UPDATE USWarehouse SET Description = ?, SET SellableOnHand = ?, SET OpenPOQuantity = ?, SET MOQ = ?, SET LeadTime = ?, SET BackOrders = ? WHERE SKU = ?',
+			conn.query(query,[description, sellable,poNumber,moq,leadtime,backorder,sku],function(error,rows,fields) {
+				console.log(error);
+				res.redirect('/products');
+			})
+		} else {
+			console.log("Left field empty; All field need to be filled.");
+			res.redirect('/products');
+		}
 });
 
+//Establishes connection to the shipping page to receive data
 app.get("/shipping",function(req, res){
 	res.render('shipping', {qs: req.query});
-	console.log(req.query);
-  console.log("rendering shipping page");
+	// console.log(req.query);
+  // console.log("rendering shipping page");
 });
 
+//For search function, grabs sku to search within database
 app.post("/shipping",urlencodedParser,function(req, res){
-	console.log(req.body.skuNumber);
-	console.log(req.body.shPOnum);
+	// console.log(req.body.skuNumber);
+	// console.log(req.body.shPOnum);
 	var sku = req.body.skuNumber;
 	var poNum = req.body.shPOnum;
 	if (sku == "" && poNum == "") {
-
+		res.redirect('/shipping');
 	} else if (sku != "" && poNum == ""){
 	  const sqlquery = "SELECT * FROM ShippingTable WHERE SKU = ?"
 	  conn.query(sqlquery, [sku],function(error,rows,fields) {
-			console.log(rows[0]);
 			var data = rows[0];
-			res.render('shipping-search', {data});
-			})
+			if (data == "" || data == null){
+				console.log("query empty");
+				res.redirect('/shipping');
+			} else {
+				res.render('shipping-search', {data});
+			}
+		})
 	} else if (sku == "" && poNum != "") {
 		const sqlquery = "SELECT * FROM ShippingTable WHERE ShippingPONumber = ?"
 		conn.query(sqlquery, [poNum], function(error,rows,fields) {
-			console.log(rows[0]);
 			var data = rows[0];
-			res.render('shipping-search', {data});
+			if (data == "" || data == null){
+				console.log("query empty");
+				res.redirect('/shipping');
+			} else {
+				res.render('shipping-search', {data});
+			}
 		})
 	}
 });
 
+//Grabs data entered and inserts new record into database
 app.post("/insertshipping", urlencodedParser, function(req, res){
 	var sku = parseInt(req.body.skuNumber);
 	var shippingdate = String(req.body.shippingdate);
@@ -129,47 +182,46 @@ app.post("/insertshipping", urlencodedParser, function(req, res){
 	var shiptotalamount = parseFloat(req.body.shiptotalamount);
 	var received = String(req.body.received);
 	var ShippingDateReceived = String(req.body.ShippingDateReceived);
-	var insertship = [[sku,shippingdate,shippingpo,shippingqty,incostperunit,shiptotalamount,received,ShippingDateReceived]];
-	const sqlqueries = "INSERT INTO ShippingTable (SKU, ShippingDate, ShippingPONumber, ShippingQty, IncostUnit, ShippingTotalAmt, Received, ShippingDateReceived) VALUES ?";
-		conn.query(sqlqueries, [insertship],function(error,rows,fields) {
-			console.log(error);
-			var data = rows;
-			//console.log(data);
-			// res.render('shipping-search', {data});
-		})
-		// console.log(sku);
+	if (sku != '' && shippingdate != '' && shippingpo != '' && shippingqty != '' && incostperunit != '' && shiptotalamount != '' && received != ''){
+		var insertship = [[sku,shippingdate,shippingpo,shippingqty,incostperunit,shiptotalamount,received,ShippingDateReceived]];
+		const sqlqueries = "INSERT INTO ShippingTable (SKU, ShippingDate, ShippingPONumber, ShippingQty, IncostUnit, ShippingTotalAmt, Received, ShippingDateReceived) VALUES ?";
+			conn.query(sqlqueries, [insertship],function(error,rows,fields) {
+				console.log(error);
+				console.log("Shipment Inserted!");
+			})
+		} else {
+			res.redirect('/shipping');
+		}
 });
 
+//it doesnt do the checks the way it should, still deletes but if null input it deletes nothing, it does not break anything
 app.post("/deleteShipping",urlencodedParser, function(req,res) {
-var sku = parseInt(req.body.skuNumber);
-	console.log(sku);
-	if (sku == "") {
-		res.redirect('/shipping');
-	} else {
-  	const sqlquery = 'DELETE FROM ShippingTable WHERE SKU = ?'
-  	conn.query(sqlquery, [sku],function(error,rows,fields) {
-			// console.log(sku);
-			console.log("Product Deleted");
+	var sku = parseInt(req.body.skuNumber);
+	const sqlquery = 'DELETE FROM ShippingTable WHERE SKU = ?'
+	  conn.query(sqlquery, [sku],function(error,rows,fields) {
+			// var data = rows;
+			console.log("Shipping Deleted");
 			res.redirect('/shipping');
 		})
-	}
 });
 
+//Establishes connection to the sales page to receive data
 app.get("/sales",function(req, res){
 	res.render('sales', {qs: req.query});
-	console.log(req.query);
-  console.log("rendering sales page")
+	// console.log(req.query);
+  // console.log("rendering sales page")
 });
 
+//For search function, grabs sku to search within database
 app.post("/sales",urlencodedParser,function(req, res){
-	console.log(req.body.skuNumber);
-	console.log(req.body.sPOnum);
-	console.log(req.body.sVendor);
+	// console.log(req.body.skuNumber);
+	// console.log(req.body.sPOnum);
+	// console.log(req.body.sVendor);
 	var sku = req.body.skuNumber;
 	var poNum = req.body.sPOnum;
 	var vendor = req.body.sVendor;
 	if (sku == "" && poNum == "" && vendor == "") {
-
+		res.redirect('/sales');
 	} else if (sku != "" && poNum == "" && vendor == ""){
 	  const sqlquery = "SELECT * FROM SalesTable WHERE SKU = ?"
 	  conn.query(sqlquery, [sku],function(error,rows,fields) {
@@ -191,7 +243,40 @@ app.post("/sales",urlencodedParser,function(req, res){
 			var data = rows[0];
 			res.render('sales-search', {data});
 		})
+	} else {
+		res.redirect('/sales');
 	}
+});
+
+//Grabs data entered and inserts new record into database
+app.post("/insertsales", urlencodedParser, function(req, res){
+	var sku = parseInt(req.body.skuNumber);
+	var vendor = String(req.body.vendor);
+	var salespo = parseInt(req.body.salespo);
+	var salesqty = parseInt(req.body.salesqty);
+	var salesdate = String(req.body.salesdate)
+	var salesamt = parseFloat(req.body.salesamt);
+	if (sku != '' && vendor != '' && salespo != '' && salesqty != '' && salesdate != '' && salesamt != '') {
+		var insertsales = [[sku,vendor,salespo,salesqty,salesdate,salesamt]];
+		const sqlquery = "INSERT INTO SalesTable (SKU, Vendor, SalesPONumber, SalesQty, SalesDate, SalesAmt) VALUES ?";
+		conn.query(sqlquery, [insertsales],function(error,rows,fields) {
+			console.log(error);
+			console.log("Sale Inserted!");
+		})
+	} else {
+		res.redirect('/sales');
+	}
+});
+
+//it doesnt do the checks the way it should, still deletes but if null input it deletes nothing, it does not break anything
+app.post("/deleteSales",urlencodedParser, function(req,res) {
+	var sku = parseInt(req.body.skuNumber);
+  const sqlquery = 'DELETE FROM SalesTable WHERE SKU = ?'
+  conn.query(sqlquery, [sku],function(error,rows,fields) {
+		// var data = rows;
+		console.log("Product Deleted");
+		res.redirect('/sales');
+	})
 });
 //authenticates uers credentials before login
 app.post('/home-page',urlencodedParser,function(request, response) {
@@ -231,25 +316,6 @@ app.post("/importDB",(req, res) => {
 
 app.post("/exportDB",(req, res) => {
   exportCSV.import();
-});
-
-app.post("/insertRecord",urlencodedParser,(req,res) => {
-	var sku = parseInt(req.body.skuNumber);
-	var description = String(req.body.description);
-	var sellable = parseInt(req.body.sellable);
-	var poNumber = parseInt(req.body.openPO);
-	var moq =  parseInt(req.body.moq);
-	var leadtime =  parseInt(req.body.leadtime);
-	var backorder =  parseInt(req.body.bkorder);
-	var insert = [[sku,description,sellable,poNumber,moq,leadtime,backorder]];
-	const sqlquery = "INSERT INTO USWarehouse (SKU, Description, SellableOnHand, OpenPOQuantity, MOQ, LeadTime, BackOrders) VALUES ?";
-	conn.query(sqlquery, [insert],function(error,rows,fields) {
-		console.log(error);
-		var data = rows;
-		//console.log(data);
-		// res.render('shipping-search', {data});
-	})
-		// console.log(sku);
 });
 
 // app.post("/editProduct",urlencodedParser,(req,res) => {

@@ -34,3 +34,7 @@ table#myTable th {
   background-color: black;
   color: white;
 }
+
+input#oldsku {
+    border: none;
+}

@@ -55,15 +55,17 @@
     <!-- Modal content -->
       <div class="modal-content">
         <span class="ship">&times;</span>
+        <div>
         <p>Update Data for Item:</p>
+      </div>
         <form class="submit-form" action="editProduct" method="POST">
-          <input action="editProduct" name="skuNumber" type= "text" id ="skuNumber" placeholder="SKU" value="<%= data.SKU %>"/>
+          <input action="editProduct" name="skuNumber" type= "text" id ="skuNumber" placeholder="SKU" value="<%= data.SKU %>" readonly/>
           <input action="editProduct" name="description" type= "text" id ="description" placeholder="Description" value="<%= data.Description %>"/>
           <input action="editProduct" name="sellable" type= "text" id ="sellable" placeholder="Sellable On Hand" value="<%= data.SellableOnHand %>"/>
           <input action="editProduct" name="openPO" type= "text" id ="openPO" placeholder="Open PO Qty" value="<%= data.OpenPOQuantity %>"/>
           <input action="editProduct" name="moq" type= "text" id ="moq" placeholder="MOQ" value="<%= data.MOQ %>"/>
-          <input action="editProduct" name="leadtime" type= "text" id ="leadtime"  placeholder="Lead Time" value="<%= data.leadtime %>"/>
-          <input action="editProduct" name="bkorder" type= "text" id ="bkorder" placeholder="Back Orders" value="<%= data.bkorder %>"/>
+          <input action="editProduct" name="leadtime" type= "text" id ="leadtime"  placeholder="Lead Time" value="<%= data.LeadTime %>"/>
+          <input action="editProduct" name="bkorder" type= "text" id ="bkorder" placeholder="Back Orders" value="<%= data.BackOrders %>"/>
           <button id = "closebtn" class="insert-buttons">Update</button>
         </form>
       </div>

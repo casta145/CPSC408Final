@@ -94,7 +94,7 @@ function intializeTables() {
   });
   conn.query(createPackagingTable, function(err,result) {
     if (err) {
-      consol.log(err);
+      console.log(err);
     }
     console.log('Packaging Table Created!');
   });
