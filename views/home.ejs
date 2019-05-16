@@ -38,16 +38,13 @@
         <div class="col-sm">
           <form action="/sales">
             <button type="submit" class="large-buttons">Sales</button>
-            <!-- <script type="text/javascript" src="Export.js"></script> -->
           </form>
           <form class ="export-form" action="exportDB" method="POST">
-            <script src = "Export.js"></script>
             <button class="large-buttons" type="Submit">Export</button>
           </form>
           </div>
         </div>
       </div>
-    </div>
 
     <!-- The Modal -->
     <div id="myModal" class="modal">
@@ -55,8 +52,8 @@
       <div class="modal-content">
         <span class="close">&times;</span>
         <p>Choose a file to import:</p>
-        <form class="import-form" action="/importDB" method="POST">
-          <input action="/importDB" name="csv_file" type= "file" id ="csv" accept=".csv">
+        <form class="import-form" action="importDB" method="POST">
+          <input action="importDB" name="csvfile" type= "file" id ="csvfile" accept=".csv">
           <button>Submit</button>
         </form>
       </div>
@@ -83,6 +80,6 @@
             modal.style.display = "none";
           }
         }
-</script>
+    </script>
   </body>
 </html>

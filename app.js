@@ -115,13 +115,9 @@ app.post("/editProduct",urlencodedParser,function(req,res) {
 	var leadtime =  parseInt(req.body.leadtime);
 	var backorder =  parseInt(req.body.bkorder);
 		if (sku != "" & description != "" && sellable != "" && poNumber != "" && moq != "" && leadtime != "" && backorder !="") {
-			//var update = [sku];
 			var values = [[description, sellable,poNumber,moq,leadtime,backorder]]
 			var sku = [sku];
-			//const query = "UPDATE USWarehouse SET Description = "+ description + " SET SellableOnHand = " + sellable + " SET OpenPOQuantity = "+ poNumber + " SET MOQ = " + moq + " SET LeadTime = "+ leadtime + " SET BackOrders = "+ backorder + " WHERE SKU = ?"
 			const query = "UPDATE USWarehouse SET Description = ?,SellableOnHand = ?,OpenPOQuantity = ?,MOQ = ?,LeadTime = ?,BackOrders = ? WHERE SKU = ?";
-			//conn.query(query, [update],function(error,rows,fields) {
-			// conn.query('UPDATE USWarehouse SET Description = ?, SET SellableOnHand = ?, SET OpenPOQuantity = ?, SET MOQ = ?, SET LeadTime = ?, SET BackOrders = ? WHERE SKU = ?',
 			conn.query(query,[description, sellable,poNumber,moq,leadtime,backorder,sku],function(error,rows,fields) {
 				console.log(error);
 				res.redirect('/products');
@@ -199,10 +195,36 @@ app.post("/deleteShipping",urlencodedParser, function(req,res) {
 	var sku = parseInt(req.body.skuNumber);
 	const sqlquery = 'DELETE FROM ShippingTable WHERE SKU = ?'
 	  conn.query(sqlquery, [sku],function(error,rows,fields) {
-			// var data = rows;
+			var data = rows;
 			console.log("Shipping Deleted");
 			res.redirect('/shipping');
 		})
+});
+
+//Popup box that allows user to update everything but the sku
+app.post("/editshipping",urlencodedParser,function(req,res) {
+	var sku = parseInt(req.body.skuNumber);
+	var shDate = String(req.body.shdate);
+	var shPOnum = parseInt(req.body.shPOnum);
+	var shQty = parseInt(req.body.shqty);
+	var shcost = parseInt(req.body.shcostunit);
+	var shTotl =  parseFloat(req.body.shtotalamt);
+	var shRec =  String(req.body.shreceived);
+	var recDate =  String(req.body.shreceiveddate);
+		if (sku != "" & shDate != "" && shPOnum != "" && shQty != "" && shcost != "" && shTotl != "" && shRec != "" && recDate !="") {
+			const query = "UPDATE ShippingTable SET ShippingDate = ?,ShippingPONumber = ?,ShippingQty = ?,IncostUnit = ?,ShippingTotalAmt = ?,Received = ?, ShippingDateReceived = ? WHERE SKU = ?";
+			conn.query(query,[shDate, shPOnum,shQty,shcost,shTotl,shRec,recDate,sku],function(error,rows,fields) {
+				if (error) {
+					console.log(error);
+				} else {
+					console.log('Shippment Updated!');
+					res.redirect('/shipping');
+				}
+			})
+		} else {
+			console.log("Left field empty; All field need to be filled.");
+			res.redirect('/shipping');
+		}
 });
 
 //Establishes connection to the sales page to receive data
@@ -214,34 +236,47 @@ app.get("/sales",function(req, res){
 
 //For search function, grabs sku to search within database
 app.post("/sales",urlencodedParser,function(req, res){
-	// console.log(req.body.skuNumber);
-	// console.log(req.body.sPOnum);
-	// console.log(req.body.sVendor);
 	var sku = req.body.skuNumber;
 	var poNum = req.body.sPOnum;
 	var vendor = req.body.sVendor;
-	if (sku == "" && poNum == "" && vendor == "") {
+	if (sku == '' && poNum == '' && vendor == '') {
 		res.redirect('/sales');
-	} else if (sku != "" && poNum == "" && vendor == ""){
+	} else if (sku != '' && poNum == '' && vendor == ''){
 	  const sqlquery = "SELECT * FROM SalesTable WHERE SKU = ?"
 	  conn.query(sqlquery, [sku],function(error,rows,fields) {
-			console.log(rows[0]);
-			var data = rows[0];
-			res.render('sales-search', {data});
-			})
-	} else if (sku == "" && poNum != "" && vendor == "") {
+			var data = rows;
+			if (data == null) {
+				console.log('Empty Query!');
+				res.redirect('/sales');
+			} else {
+				res.render('sales-search', {data});
+			}
+		})
+	} else if (sku == '' && poNum != '' && vendor == '') {
 		const sqlquery = "SELECT * FROM SalesTable WHERE SalesPONumber = ?"
 		conn.query(sqlquery, [poNum], function(error,rows,fields) {
-			console.log(rows[0]);
-			var data = rows[0];
-			res.render('sales-search', {data});
+			var data = rows;
+			if (data == null) {
+				console.log('Empty Query!');
+				res.redirect('/sales');
+			} else {
+				res.render('sales-search', {data});
+			}
 		})
-	} else if (sku == "" && poNum == "" && vendor != "") {
+	} else if (sku == '' && poNum == '' && vendor != '') {
 		const sqlquery = "SELECT * FROM SalesTable WHERE Vendor = ?"
 		conn.query(sqlquery, [vendor], function(error,rows,fields) {
-			console.log(rows[0]);
-			var data = rows[0];
-			res.render('sales-search', {data});
+			var data = rows;
+			// data = rows;
+			// var data2 = fields;
+			// console.log(rows);
+			// console.log(rows);
+			if (data == null) {
+				console.log('Empty Query!');
+				res.redirect('/sales');
+			} else {
+				res.render('sales-search', {data});
+			}
 		})
 	} else {
 		res.redirect('/sales');
@@ -260,8 +295,13 @@ app.post("/insertsales", urlencodedParser, function(req, res){
 		var insertsales = [[sku,vendor,salespo,salesqty,salesdate,salesamt]];
 		const sqlquery = "INSERT INTO SalesTable (SKU, Vendor, SalesPONumber, SalesQty, SalesDate, SalesAmt) VALUES ?";
 		conn.query(sqlquery, [insertsales],function(error,rows,fields) {
-			console.log(error);
-			console.log("Sale Inserted!");
+			if (data == null) {
+				console.log('Empty Insert!');
+				res.redirect('/sales');
+			} else {
+				console.log("Sale Inserted!");
+				res.render('sales-search', {data});
+			}
 		})
 	} else {
 		res.redirect('/sales');
@@ -269,15 +309,51 @@ app.post("/insertsales", urlencodedParser, function(req, res){
 });
 
 //it doesnt do the checks the way it should, still deletes but if null input it deletes nothing, it does not break anything
-app.post("/deleteSales",urlencodedParser, function(req,res) {
+app.post("/deleteSalesbySKU",urlencodedParser, function(req,res) {
 	var sku = parseInt(req.body.skuNumber);
-  const sqlquery = 'DELETE FROM SalesTable WHERE SKU = ?'
-  conn.query(sqlquery, [sku],function(error,rows,fields) {
-		// var data = rows;
-		console.log("Product Deleted");
-		res.redirect('/sales');
-	})
+	const sqlquery = 'DELETE FROM SalesTable WHERE SKU = ?'
+	  conn.query(sqlquery, [sku],function(error,rows,fields) {
+			var data = rows;
+			console.log("Sale Deleted");
+			res.redirect('/sales');
+		})
 });
+
+//it doesnt do the checks the way it should, still deletes but if null input it deletes nothing, it does not break anything
+app.post("/deleteSalesbyPO",urlencodedParser, function(req,res) {
+	var po = parseInt(req.body.sPOnum);
+	const sqlquery = 'DELETE FROM SalesTable WHERE SalesPONumber = ?'
+	  conn.query(sqlquery, [po],function(error,rows,fields) {
+			var data = rows;
+			console.log("Sale Deleted");
+			res.redirect('/sales');
+		})
+});
+
+//Popup box that allows user to update everything but the sku
+app.post("/editsales",urlencodedParser,function(req,res) {
+	var sku = parseInt(req.body.skuNumber);
+	var sVendor = String(req.body.vendor);
+	var sPO = parseInt(req.body.salespo);
+	var sQty = parseInt(req.body.salesqty);
+	var sDate = String(req.body.salesdate);
+	var sAmt =  parseFloat(req.body.salesamt);
+		if (sku != "" & sVendor != "" && sPO != "" && sQty != "" && sDate != "" && sAmt != "") {
+			const query = "UPDATE ShippingTable SET Vendor = ?,ShippingPONumber = ?,SalesPONumber = ?,SalesQty = ?,SalesDate = ?,SalesAmt = ? WHERE SKU = ?";
+			conn.query(query,[sVendor, sPO,sQty,sDate,sAmt,sku],function(error,rows,fields) {
+				if (error) {
+					console.log(error);
+				} else {
+					console.log('Sale Updated!');
+					res.redirect('/sales');
+				}
+			})
+		} else {
+			console.log("Left field empty; All field need to be filled.");
+			res.redirect('/sales');
+		}
+});
+
 //authenticates uers credentials before login
 app.post('/home-page',urlencodedParser,function(request, response) {
 	console.log(request.body)
@@ -308,7 +384,7 @@ app.get('/home',function(request, response) {
 });
 
 app.post("/importDB",(req, res) => {
-  var csvfile = req.body.csv_file;
+  var csvfile = req.body.csvfile;
 	console.log(csvfile);
   //importCsvData2MySQL(csvfile);
   importCSV.import(csvfile);

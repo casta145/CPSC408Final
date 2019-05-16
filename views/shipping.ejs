@@ -23,9 +23,9 @@
     <div class="shipping-content">
       <form class="search-form" id="search-form" action="/shipping" method="POST">
       <label for="skuNumber">Sku Number:</label>
-      <input class="sku-search" id="skuNumber" name="skuNumber" type="text" value="<%= qs.skuNumber %>"/>
+      <input class="sku-search" id="skuNumber" name="skuNumber" type="text" value="<%= qs.skuNumber %>" placeholder="Enter SKU"/>
       <label for="shPOnum">PO Number:</label>
-      <input class="sku-search" id="shPOnum" name="shPOnum" type="text" value="<%= qs.shPOnum %>"/>
+      <input class="sku-search" id="shPOnum" name="shPOnum" type="text" value="<%= qs.shPOnum %>" placeholder="Enter PO"/>
       <input type="submit" value="Submit">
       </form>
 
@@ -58,11 +58,11 @@
         <p>Enter Data for New Shipping Record:</p>
         <form class="submit-form" action="insertshipping" method="POST">
           <input action="insertshipping" name="skuNumber" type= "text" id ="skuNumber" placeholder="SKU" value="<%= qs.skuNumber %>">
-          <input action="insertshipping" name="shippingdate" type= "text" id ="shippingdate" placeholder="ShippingDate" value="<%= qs.ShippingDate %>">
-          <input action="insertshipping" name="shippingpo" type= "text" id ="shippingpo" placeholder="ShippingPONumber" value="<%= qs.Shipping_Po %>">
-          <input action="insertshipping" name="shippingqty" type= "text" id ="shippingqty" placeholder="ShippingQty" value="<%= qs.shippingqty %>">
-          <input action="insertshipping" name="incostperunit" type= "text" id ="incostperunit" placeholder="IncostUnit" value="<%= qs.IncostUnit %>">
-          <input action="insertshipping" name="shiptotalamount" type= "text" id ="shippingtotalamount"  placeholder="ShippingTotalAmt" value="<%= qs.ShipTotalAmount %>">
+          <input action="insertshipping" name="shippingdate" type= "text" id ="shippingdate" placeholder="Shipping Date" value="<%= qs.ShippingDate %>">
+          <input action="insertshipping" name="shippingpo" type= "text" id ="shippingpo" placeholder="Shipping PO Number" value="<%= qs.Shipping_Po %>">
+          <input action="insertshipping" name="shippingqty" type= "text" id ="shippingqty" placeholder="Shipping Qty" value="<%= qs.shippingqty %>">
+          <input action="insertshipping" name="incostperunit" type= "text" id ="incostperunit" placeholder="In cost/Unit" value="<%= qs.IncostUnit %>">
+          <input action="insertshipping" name="shiptotalamount" type= "text" id ="shippingtotalamount"  placeholder="Shipping Total Amt" value="<%= qs.ShipTotalAmount %>">
           <input action="insertshipping" name="received" type= "text" id ="received" placeholder="Received" value="<%= qs.received %>">
           <input action="insertshipping" name="ShippingDateReceived" type= "text" id ="ShippingDateReceived" placeholder="ShippingDateReceived" value="<%= qs.ShippingDateReceived %>">
           <button id = "closebtn" class="insert-buttons">Submit</button>

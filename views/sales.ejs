@@ -21,22 +21,89 @@
 
     <div class="sales-content">
       <form class="search-form" id="search-form" action="/sales" method="POST">
-      <label for="skuNumber">Sku Number:</label>
-      <input class="sku-search" id="skuNumber" name="skuNumber" type="text" value="<%= qs.skuNumber %>"/>
-      <label for="shPOnum">PO Number:</label>
-      <input class="sku-search" id="shPOnum" name="sPOnum" type="text" value="<%= qs.sPOnum %>"/>
-      <label for="sVendor">Vendor:</label>
-      <input class="sku-search" id="sVendor" name="sVendor" type="text" value="<%= qs.sVendor %>"/>
-      <input type="submit" value="Submit">
+        <label for="skuNumber">Sku Number:</label>
+        <input class="sku-search" id="skuNumber" name="skuNumber" type="text" value="<%= qs.skuNumber %>" placeholder="Enter SKU"/>
+        <label for="shPOnum">PO Number:</label>
+        <input class="sku-search" id="shPOnum" name="sPOnum" type="text" value="<%= qs.sPOnum %>" placeholder="Enter PO"/>
+        <label for="sVendor">Vendor:</label>
+        <input class="sku-search" id="sVendor" name="sVendor" type="text" value="<%= qs.sVendor %>" placeholder="Enter Vendor"/>
+        <input type="submit" value="Submit">
+      </form>
+      <div class="insertToDB">
+        <!-- Trigger/Open The Modal -->
+        <label for="insertBtn">Create New Sale:</label>
+        <button id="insertBtn" class="insert-buttons">Insert</button>
+      </div>
+      <form class="search-form" id="search-form" action="/deleteSalesbySKU" method="POST">
+        <label for="skuNumber">Delete Sale:</label>
+        <input class="sku-search" id="skuNumber" name="skuNumber" type="text" value="<%= qs.skuNumber %>" placeholder="Enter SKU"/>
+        <input type="submit" value="Delete">
+      </form>
+      <form class="search-form" id="search-form" action="/deleteSalesbyPO" method="POST">
+        <label for="sPOnum">Delete Sale:</label>
+        <input class="sku-search" id="sPOnum" name="sPOnum" type="text" value="<%= qs.sPOnum %>" placeholder="Enter PO Number"/>
+        <input type="submit" value="Delete">
+      </form>
+        <form action="/home">
+          <button type="submit" class="small-buttons">Go Back</button>
+        </form>
     </div>
-    <form action="/home">
-      <button type="submit" class="small-buttons">Go Back</button>
-    </form>
     <%= qs.skuNumber %>
     <%= qs.sPOnum %>
     <%= qs.sVendor %>
     <section>
       <table id="myTable"> </table>
     </section>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+    <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Enter Data for New Item:</p>
+        <form class="submit-form" action="/insertsales" method="POST">
+          <input action="insertsales" name="skuNumber" type= "text" id ="skuNumber" placeholder="SKU" value="<%= qs.skuNumber %>">
+          <input action="insertsales" name="vendor" type= "text" id ="vendor" placeholder="Vendor" value="<%= qs.sVendor %>">
+          <input action="insertsales" name="salespo" type= "text" id ="salespo" placeholder="Sales PO Number" value="<%= qs.sPOnum %>">
+          <input action="insertsales" name="salesqty" type= "text" id ="salesqty" placeholder="Sales Qty" value="<%= qs.sQty %>">
+          <input action="insertsales" name="salesdate" type= "text" id ="salesdate" placeholder="Sales Date" value="<%= qs.sDate %>">
+          <input action="insertsales" name="salesamt" type= "text" id ="salesamt"  placeholder="Sales Amt" value="<%= qs.sAmt %>">
+          <button id = "closebtn" class="insert-buttons">Insert</button>
+        </form>
+      </div>
+    </div>
+    <%= qs.skuNumber %>
+    <%= qs.sVendor %>
+    <%= qs.sPOnum %>
+    <%= qs.sQty %>
+    <%= qs.sDate %>
+    <%= qs.sAmt %>
+    <script>
+      // Get the modal
+      var modal = document.getElementById('myModal');
+      // Get the button that opens the modal
+      var btn = document.getElementById("insertBtn");
+      // Get the <span> element that closes the modal
+      var span = document.getElementsByClassName("close")[0];
+      // After submit button is hit, it triggers the modal to close
+      var close = document.getElementById("closebtn");
+      // When the user clicks the button, open the modal
+      btn.onclick = function() {
+        modal.style.display = "block";
+        }
+      // When the user clicks on <span> (x), close the modal
+      span.onclick = function() {
+        modal.style.display = "none";
+        }
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
+        close.onclick = function(){
+          modal.style.display = "none";
+        }
+      </script>
   </body>
-</html>

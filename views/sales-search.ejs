@@ -19,32 +19,29 @@
       <h2>Sales Search</h2>
     </div>
 
-    <div class="sales-content">
-      <form class="search-form" id="search-form" action="/sales" method="POST">
-      <label for="skuNumber">Sku Number:</label>
-      <input class="sku-search" id="skuNumber" name="skuNumber" type="text" value="<%= qs.skuNumber %>"/>
-      <label for="shPOnum">PO Number:</label>
-      <input class="sku-search" id="shPOnum" name="sPOnum" type="text" value="<%= qs.sPOnum %>"/>
-      <label for="sVendor">Vendor:</label>
-      <input class="sku-search" id="sVendor" name="sVendor" type="text" value="<%= qs.sVendor %>"/>
-      <input type="submit" value="Submit">
-      </form>
-      <div class="inserttoDB">
-          <label for="insertBtn">Create New Record:</label>
-          <button id="insertBtn" class="insert-buttons">INSERT</button>
-      </div>
-      <form class="search-form" id="search-form" action="/deleteSales" method="POST">
-        <label for="skuNumber">Delete Product:</label>
-        <input class="sku-search" id="skuNumber" name="skuNumber" type="text" value="<%= qs.skuNumber %>" placeholder="Enter SKU"/>
-        <input type="submit" value="Submit">
-      </form>
-      <form action="/home">
-        <button type="submit" class="small-buttons">Go Back</button>
-      </form>
-    </div>
-    <%= qs.skuNumber %>
-    <%= qs.sPOnum %>
-    <%= qs.sVendor %>
+      <table class="table-data" id="myTable">
+        <tr>
+          <th>SKU</th>
+          <th>Vendor</th>
+          <th>Sales PO Number</th>
+          <th>Sales Quantity</th>
+          <th>Sales Date</th>
+          <th>Sales Amount</th>
+        </tr>
+        <tr>
+          <td><%= data.SKU %></td>
+          <td><%= data.Vendor %></td>
+          <td><%= data.SalesPONumber %></td>
+          <td><%= data.SalesQty %></td>
+          <td><%= data.SalesDate %></td>
+          <td><%= data.SalesAmt %></td>
+        </tr>
+      </table>
+    </section>
+    <form>
+      <button type="submit" class="small-buttons" action="sales">Back</button>
+    </form>
+    <button id="editbtn" class="small-buttons">Edit</button>
     <section>
       <table id="myTable"> </table>
     </section>
@@ -56,29 +53,23 @@
     <!-- Modal content -->
       <div class="modal-content">
         <span class="close">&times;</span>
-        <p>Enter Data for New Sales Record:</p>
-        <form class="submit-form" action="insertsales" method="POST">
-          <input action="insertsales" name="skuNumber" type= "text" id ="skuNumber" placeholder="SKU" value="<%= qs.skuNumber %>">
-          <input action="insertsales" name="vendor" type= "text" id ="vendor" placeholder="Vendor" value="<%= qs.vendor %>">
-          <input action="insertsales" name="salespo" type= "text" id ="salespo" placeholder="SalesPONumber" value="<%= qs.salespo %>">
-          <input action="insertsales" name="salesqty" type= "text" id ="salesqty" placeholder="SalesQty" value="<%= qs.salesqty %>">
-          <input action="insertsales" name="salesdate" type= "text" id ="salesdate" placeholder="SalesDate" value="<%= qs.salesdate %>">
-          <input action="insertsales" name="salesamt" type= "text" id ="salesamt" placeholder="SalesAmt" value="<%= qs.salesamt %>">
+        <p>Update Data for Sales Record:</p>
+        <form class="submit-form" action="editsales" method="POST">
+          <input action="editsales" name="skuNumber" type= "text" id ="skuNumber" placeholder="SKU" value="<%= data.SKU %>">
+          <input action="editsales" name="vendor" type= "text" id ="vendor" placeholder="Vendor" value="<%= data.Vendor %>">
+          <input action="editsales" name="salespo" type= "text" id ="salespo" placeholder="Sales PO Number" value="<%= data.SalesPONumber %>">
+          <input action="editsales" name="salesqty" type= "text" id ="salesqty" placeholder="Sales Qty" value="<%= data.SalesQty %>">
+          <input action="editsales" name="salesdate" type= "text" id ="salesdate" placeholder="Sales Date" value="<%= data.SalesDate %>">
+          <input action="editsales" name="salesamt" type= "text" id ="salesamt" placeholder="Sales Amt" value="<%= data.SalesAmt %>">
           <button id = "closebtn" class="insert-buttons">Submit</button>
         </form>
       </div>
     </div>
-    <%= qs.skuNumber %>
-    <%= qs.vendor %>
-    <%= qs.salespo %>
-    <%= qs.salesqty %>
-    <%= qs.salesdate %>
-    <%= qs.salesamt%>
     <script>
       // Get the modal
       var modal = document.getElementById('myModal');
       // Get the button that opens the modal
-      var btn = document.getElementById("insertBtn");
+      var btn = document.getElementById("editbtn");
       // Get the <span> element that closes the modal
       var span = document.getElementsByClassName("close")[0];
       // After submit button is hit, it triggers the modal to close

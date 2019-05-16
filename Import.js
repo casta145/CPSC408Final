@@ -71,7 +71,6 @@ module.exports = {
 
           console.log("import successful");
   //         Open the MySQL connection
-  //           var query = "INSERT INTO TestTable (SKU, Test1, Test2, Test3, Test4, Test5, Test6) VALUES ?,?,?,?,?,?,?";
             var query = 'INSERT INTO USWarehouse (SKU, Description, SellableOnHand, OpenPOQuantity, MOQ, LeadTime, BackOrders) VALUES ?'
             conn.query(query, [csvData], (error,response) => {
               console.log(error || response);
