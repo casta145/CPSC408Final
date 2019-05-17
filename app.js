@@ -72,6 +72,21 @@ app.post("/products",urlencodedParser,function(req, res){
 	}
 });
 
+app.post("/products-search-all",urlencodedParser,function(req, res){
+	// console.log(req.body.skuNumber)
+	  const sqlquery = "SELECT * FROM USWarehouse"
+	  conn.query(sqlquery,function(error,rows,fields) {
+				var data = rows;
+
+				if (data == "" || data == null){
+					console.log("query empty");
+					res.redirect('/products');
+				} else {
+					res.render('products-search-all', {data});
+				}
+		})
+});
+
 //Grabs data entered and inserts new record into database
 app.post("/insertRecord",urlencodedParser,(req,res) => {
 	var sku = parseInt(req.body.skuNumber);
@@ -212,15 +227,50 @@ app.post("/editshipping",urlencodedParser,function(req,res) {
 	var shRec =  String(req.body.shreceived);
 	var recDate =  String(req.body.shreceiveddate);
 		if (sku != "" & shDate != "" && shPOnum != "" && shQty != "" && shcost != "" && shTotl != "" && shRec != "" && recDate !="") {
+
 			const query = "UPDATE ShippingTable SET ShippingDate = ?,ShippingPONumber = ?,ShippingQty = ?,IncostUnit = ?,ShippingTotalAmt = ?,Received = ?, ShippingDateReceived = ? WHERE SKU = ?";
-			conn.query(query,[shDate, shPOnum,shQty,shcost,shTotl,shRec,recDate,sku],function(error,rows,fields) {
-				if (error) {
-					console.log(error);
-				} else {
-					console.log('Shippment Updated!');
-					res.redirect('/shipping');
-				}
-			})
+
+			const updateQuanity = "UPDATE USWarehouse, ShippingTable SET USWarehouse.OpenPOQuantity = USWarehouse.OpenPOQuantity - (SELECT ShippingTable.ShippingQty FROM ShippingTable WHERE (ShippingTable.SKU = ?) and (ShippingTable.ShippingPONumber = ?)) WHERE USWarehouse.SKU = (Select ShippingTable.SKU FROM ShippingTable WHERE ((ShippingTable.SKU= ?) AND (ShippingTable.Received = 'Yes') AND (ShippingTable.ShippingPONumber = ?)))";
+
+			const updateSellable = "UPDATE USWarehouse, ShippingTable SET USWarehouse.SellableOnHand = USWarehouse.SellableOnHand + (SELECT ShippingTable.ShippingQty FROM ShippingTable WHERE (ShippingTable.SKU = ?) and (ShippingTable.ShippingPONumber = ?)) WHERE USWarehouse.SKU = (Select ShippingTable.SKU FROM ShippingTable WHERE ((ShippingTable.SKU = ?) AND (ShippingTable.Received = 'Yes') AND (ShippingTable.ShippingPONumber = ?)))";
+
+
+			conn.beginTransaction(function(err){
+				if (err) { throw err; }
+				conn.query(query,[shDate, shPOnum,shQty,shcost,shTotl,shRec,recDate,sku],function(error,rows,fields) {
+					if (error) {
+						console.log(error);
+					} else {
+						console.log('Shippment Updated!');
+						//res.redirect('/shipping');
+					}
+
+	 				conn.query(updateQuanity,[sku, shPOnum, sku, shPOnum], function(err, result) {
+		 				if (err) {
+			 				conn.rollback(function() {
+				 				throw err;
+			 				});
+		 				}
+
+		 				conn.query(updateSellable,[sku, shPOnum, sku, shPOnum], function(err, result) {
+			 				if (err) {
+				 				conn.rollback(function() {
+					 				throw err;
+				 				});
+			 				}
+			 				conn.commit(function(err) {
+				 				if (err) {
+					 				conn.rollback(function() {
+						 				throw err;
+					 				});
+				 				}
+				 				console.log('Transaction Complete.');
+				 				conn.end();
+			 				});
+		 				});
+					});
+ 				});
+			});
 		} else {
 			console.log("Left field empty; All field need to be filled.");
 			res.redirect('/shipping');
