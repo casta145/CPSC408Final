@@ -16,17 +16,16 @@
       <h2>Welcome!</h2>
     </div>
 
-    <div class="sell-quick-table">
-      Sellable on Hand
-    </div>
-
     <div class="container">
       <div class="row">
         <div class="col-sm">
           <form action="/products">
             <button type="submit" class="large-buttons">Products</button>
           </form>
-          <button type="button" class="large-buttons">Sales Reports</button> <br>
+          <form action="/sales-reports">
+            <button type="submit" class="large-buttons">Sales Reports</button> <br>
+          </form>
+          <!-- <button type="button" class="large-buttons">Sales Reports</button> <br> -->
         </div>
         <div class="col-sm">
           <form action="/shipping">
@@ -46,16 +45,22 @@
         </div>
       </div>
 
+    <img src="imgs/tenor.gif" alt="dancing dog">
+
+
     <!-- The Modal -->
     <div id="myModal" class="modal">
+
     <!-- Modal content -->
       <div class="modal-content">
+        <img src="imgs/rickroll.gif" alt="dancing rick">
         <span class="close">&times;</span>
         <p>Choose a file to import:</p>
         <form class="import-form" action="importDB" method="POST">
           <input action="importDB" name="csvfile" type= "file" id ="csvfile" accept=".csv">
           <button>Submit</button>
         </form>
+
       </div>
     </div>
 

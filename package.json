@@ -23,6 +23,7 @@
     "express": "^4.16.4",
     "express-session": "^1.16.1",
     "fast-csv": "^2.5.0",
+    "highcharts": "^7.1.1",
     "jquery": "^3.4.1",
     "json": "^9.0.6",
     "morgan": "^1.9.1",

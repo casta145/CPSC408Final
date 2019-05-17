@@ -18,6 +18,8 @@ var create = require('./createTables');
 var importCSV = require('./Import');
 var exportCSV = require('./Export');
 
+var Highcharts = require('highcharts');
+
 //outputs our api requests to console to help display what is occuring
 app.use(morgan('short'))
 //this allows access to the any file in the public folder
@@ -148,6 +150,12 @@ app.get("/shipping",function(req, res){
 	res.render('shipping', {qs: req.query});
 	// console.log(req.query);
   // console.log("rendering shipping page");
+});
+
+app.get("/sales-reports",function(req, res){
+	res.render('sales-reports', {qs: req.query});
+	// console.log(req.query);
+  // console.log("rendering product page")
 });
 
 //For search function, grabs sku to search within database
