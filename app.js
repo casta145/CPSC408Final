@@ -277,6 +277,21 @@ app.post("/editshipping",urlencodedParser,function(req,res) {
 		}
 });
 
+app.post("/shipping-search-all",urlencodedParser,function(req, res){
+	// console.log(req.body.skuNumber)
+	  const sqlquery = "SELECT * FROM ShippingTable"
+	  conn.query(sqlquery,function(error,rows,fields) {
+				var data = rows;
+
+				if (data == "" || data == null){
+					console.log("query empty");
+					res.redirect('/shipping');
+				} else {
+					res.render('shipping-search-all', {data});
+				}
+		})
+});
+
 //Establishes connection to the sales page to receive data
 app.get("/sales",function(req, res){
 	res.render('sales', {qs: req.query});
@@ -294,8 +309,8 @@ app.post("/sales",urlencodedParser,function(req, res){
 	} else if (sku != '' && poNum == '' && vendor == ''){
 	  const sqlquery = "SELECT * FROM SalesTable WHERE SKU = ?"
 	  conn.query(sqlquery, [sku],function(error,rows,fields) {
-			var data = rows;
-			if (data == null) {
+			var data = rows[0];
+			if (data == null || data == "") {
 				console.log('Empty Query!');
 				res.redirect('/sales');
 			} else {
@@ -305,8 +320,8 @@ app.post("/sales",urlencodedParser,function(req, res){
 	} else if (sku == '' && poNum != '' && vendor == '') {
 		const sqlquery = "SELECT * FROM SalesTable WHERE SalesPONumber = ?"
 		conn.query(sqlquery, [poNum], function(error,rows,fields) {
-			var data = rows;
-			if (data == null) {
+			var data = rows[0];
+			if (data == null || data == '') {
 				console.log('Empty Query!');
 				res.redirect('/sales');
 			} else {
@@ -316,12 +331,8 @@ app.post("/sales",urlencodedParser,function(req, res){
 	} else if (sku == '' && poNum == '' && vendor != '') {
 		const sqlquery = "SELECT * FROM SalesTable WHERE Vendor = ?"
 		conn.query(sqlquery, [vendor], function(error,rows,fields) {
-			var data = rows;
-			// data = rows;
-			// var data2 = fields;
-			// console.log(rows);
-			// console.log(rows);
-			if (data == null) {
+			var data = rows[0];
+			if (data == null || data == '') {
 				console.log('Empty Query!');
 				res.redirect('/sales');
 			} else {
@@ -329,6 +340,7 @@ app.post("/sales",urlencodedParser,function(req, res){
 			}
 		})
 	} else {
+		console.log('exists out');
 		res.redirect('/sales');
 	}
 });
@@ -402,6 +414,20 @@ app.post("/editsales",urlencodedParser,function(req,res) {
 			console.log("Left field empty; All field need to be filled.");
 			res.redirect('/sales');
 		}
+});
+
+app.post("/sales-search-all",urlencodedParser,function(req, res){
+	// console.log(req.body.skuNumber)
+	  const sqlquery = "SELECT * FROM SalesTable"
+	  conn.query(sqlquery,function(error,rows,fields) {
+				var data = rows;
+				if (data == "" || data == null){
+					console.log("query empty");
+					res.redirect('/sales');
+				} else {
+					res.render('sales-search-all', {data});
+				}
+		})
 });
 
 //authenticates uers credentials before login

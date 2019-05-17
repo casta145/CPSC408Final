@@ -26,23 +26,25 @@
       <table class="table-data" id="myTable">
         <tr>
           <th>SKU</th>
-          <th>Description</th>
-          <th>Sellable On Hand</th>
-          <th>Open PO Quantity</th>
-          <th>MOQ</th>
-          <th>Lead Time</th>
-          <th>Back Orders</th>
+          <th>Shipping Date</th>
+          <th>Shipping PO Number</th>
+          <th>Shipping Quantity</th>
+          <th>InCost/Unit</th>
+          <th>Shipping Total Amount</th>
+          <th>Received</th>
+          <th>Shipping Date Received</th>
         </tr>
 
         <% for (var i = 0; i < data.length; i++) { %>
         <tr>
           <td><%= data[i].SKU %></td>
-          <td><%= data[i].Description %></td>
-          <td><%= data[i].SellableOnHand %></td>
-          <td><%= data[i].OpenPOQuantity %></td>
-          <td><%= data[i].MOQ %></td>
-          <td><%= data[i].LeadTime %></td>
-          <td><%= data[i].BackOrders %></td>
+          <td><%= data[i].ShippingDate %></td>
+          <td><%= data[i].ShippingPONumber %></td>
+          <td><%= data[i].ShippingQty %></td>
+          <td><%= data[i].IncostUnit %></td>
+          <td><%= data[i].ShippingTotalAmt %></td>
+          <td><%= data[i].Received %></td>
+          <td><%= data[i].ShippingDateReceived %></td>
         </tr>
         <% } %>
 

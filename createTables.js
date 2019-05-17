@@ -78,37 +78,37 @@ function intializeTables() {
     if (err) {
       console.log(err);
     }
-    console.log('TestTable Table Created!');
+    //console.log('TestTable Table Created!');
   });
   conn.query(createUSWarehouse, function(err,result) {
     if (err) {
       console.log(err);
     }
-    console.log('USWarehouse Table Created!');
+    //console.log('USWarehouse Table Created!');
   });
   conn.query(createDimensionTable, function(err,result) {
     if (err) {
       console.log(err);
     }
-    console.log('Dimension Table Created!');
+    //console.log('Dimension Table Created!');
   });
   conn.query(createPackagingTable, function(err,result) {
     if (err) {
       console.log(err);
     }
-    console.log('Packaging Table Created!');
+    //console.log('Packaging Table Created!');
   });
   conn.query(createShippingTable, function(err,result) {
     if (err) {
       console.log(err);
     }
-    console.log('Shipping Table Created!');
+    //console.log('Shipping Table Created!');
   });
   conn.query(createSalesTable, function(err,result) {
     if (err) {
       console.log(err);
     }
-    console.log('Sales Table Created!');
+    //console.log('Sales Table Created!');
   });
 }
 

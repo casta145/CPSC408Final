@@ -22,9 +22,9 @@
 
     <div class="shipping-content">
       <form class="search-form" id="search-form" action="/shipping" method="POST">
-      <label for="skuNumber">Sku Number:</label>
+      <label for="skuNumber">Search Sku Number:</label>
       <input class="sku-search" id="skuNumber" name="skuNumber" type="text" value="<%= qs.skuNumber %>" placeholder="Enter SKU"/>
-      <label for="shPOnum">PO Number:</label>
+      <label for="shPOnum">or PO Number:</label>
       <input class="sku-search" id="shPOnum" name="shPOnum" type="text" value="<%= qs.shPOnum %>" placeholder="Enter PO"/>
       <input type="submit" value="Submit">
       </form>
@@ -38,7 +38,10 @@
           <input class="sku-search" id="skuNumber" name="skuNumber" type="text" value="<%= qs.skuNumber %>" placeholder="Enter SKU"/>
           <input type="submit" value="Submit">
         </form>
-          <form action="/home">
+        <form action="/shipping-search-all" method="POST">
+          <button type="submit" class="small-buttons">Search All</button>
+        </form>
+        <form action="/home">
           <button type="submit" class="small-buttons">Go Back</button>
         </form>
       </div>

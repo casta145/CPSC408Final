@@ -21,11 +21,11 @@
 
     <div class="sales-content">
       <form class="search-form" id="search-form" action="/sales" method="POST">
-        <label for="skuNumber">Sku Number:</label>
+        <label for="skuNumber">Search Sku Number:</label>
         <input class="sku-search" id="skuNumber" name="skuNumber" type="text" value="<%= qs.skuNumber %>" placeholder="Enter SKU"/>
-        <label for="shPOnum">PO Number:</label>
+        <label for="shPOnum">or PO Number:</label>
         <input class="sku-search" id="shPOnum" name="sPOnum" type="text" value="<%= qs.sPOnum %>" placeholder="Enter PO"/>
-        <label for="sVendor">Vendor:</label>
+        <label for="sVendor">or Vendor:</label>
         <input class="sku-search" id="sVendor" name="sVendor" type="text" value="<%= qs.sVendor %>" placeholder="Enter Vendor"/>
         <input type="submit" value="Submit">
       </form>
@@ -43,6 +43,9 @@
         <label for="sPOnum">Delete Sale:</label>
         <input class="sku-search" id="sPOnum" name="sPOnum" type="text" value="<%= qs.sPOnum %>" placeholder="Enter PO Number"/>
         <input type="submit" value="Delete">
+      </form>
+      <form action="/sales-search-all" method="POST">
+        <button type="submit" class="small-buttons">Search All</button>
       </form>
         <form action="/home">
           <button type="submit" class="small-buttons">Go Back</button>
