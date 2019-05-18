@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Sales Reports</title>
+    <title>Shipping Reports</title>
 
     <link rel="stylesheet" type ="text/css" href = "styles/header.css" />
     <link rel="stylesheet" type ="text/css" href = "styles/sub-pages.css" />
@@ -16,8 +16,12 @@
     <% include partials/header.ejs %>
 
     <div class="title-block">
-      <h2>Sales Reports</h2>
+      <h2>Shipping Reports</h2>
     </div>
+
+    <form action="/home">
+      <button type="submit" class="small-buttons">Go Back</button>
+    </form>
 
     <div class="container">
     <canvas id="myChart"></canvas>
