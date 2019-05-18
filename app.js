@@ -373,7 +373,8 @@ app.post("/insertsales", urlencodedParser, function(req, res){
 		var insertsales = [[sku,vendor,salespo,salesqty,salesdate,salesamt]];
 		const sqlquery = "INSERT INTO SalesTable (SKU, Vendor, SalesPONumber, SalesQty, SalesDate, SalesAmt) VALUES ?";
 		conn.query(sqlquery, [insertsales],function(error,rows,fields) {
-			if (data == null) {
+			var data = rows[0];
+			if (data == null || data == '') {
 				console.log('Empty Insert!');
 				res.redirect('/sales');
 			} else {
@@ -484,6 +485,7 @@ app.post("/importDB",(req, res) => {
 
 app.post("/exportDB",(req, res) => {
   exportCSV.import();
+	res.redirect('/home');
 });
 
 // app.post("/editProduct",urlencodedParser,(req,res) => {
