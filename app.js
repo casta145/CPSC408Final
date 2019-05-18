@@ -196,6 +196,8 @@ app.post("/shipping",urlencodedParser,function(req, res){
 				res.render('shipping-search', {data});
 			}
 		})
+	} else {
+		res.redirect('/shipping');
 	}
 });
 
@@ -450,7 +452,7 @@ app.post("/editsales",urlencodedParser,function(req,res) {
 	var sDate = String(req.body.salesdate);
 	var sAmt =  parseFloat(req.body.salesamt);
 		if (sku != "" & sVendor != "" && sPO != "" && sQty != "" && sDate != "" && sAmt != "") {
-			const query = "UPDATE ShippingTable SET Vendor = ?,ShippingPONumber = ?,SalesPONumber = ?,SalesQty = ?,SalesDate = ?,SalesAmt = ? WHERE SKU = ?";
+			const query = "UPDATE SalesTable SET Vendor = ?,SalesPONumber = ?,SalesQty = ?,SalesDate = ?,SalesAmt = ? WHERE SKU = ?";
 			conn.query(query,[sVendor, sPO,sQty,sDate,sAmt,sku],function(error,rows,fields) {
 				if (error) {
 					console.log(error);
@@ -516,7 +518,8 @@ app.post("/importDB",(req, res) => {
 });
 
 app.post("/exportDB",(req, res) => {
-  exportCSV.import();
+  // exportCSV.import();
+	exportCSV.test
 	res.redirect('/home');
 });
 
