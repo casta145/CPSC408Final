@@ -28,14 +28,16 @@
           <th>Sales Date</th>
           <th>Sales Amount</th>
         </tr>
+        <% for (var i = 0; i < data.length; i++) { %>
         <tr>
-          <td><%= data.SKU %></td>
-          <td><%= data.Vendor %></td>
-          <td><%= data.SalesPONumber %></td>
-          <td><%= data.SalesQty %></td>
-          <td><%= data.SalesDate %></td>
-          <td><%= data.SalesAmt %></td>
+          <td><%= data[i].SKU %></td>
+          <td><%= data[i].Vendor %></td>
+          <td><%= data[i].SalesPONumber %></td>
+          <td><%= data[i].SalesQty %></td>
+          <td><%= data[i].SalesDate %></td>
+          <td><%= data[i].SalesAmt %></td>
         </tr>
+        <% } %>
       </table>
     </section>
 

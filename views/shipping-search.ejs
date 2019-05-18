@@ -31,16 +31,19 @@
           <th>Received</th>
           <th>Shipping Date Received</th>
         </tr>
+
+        <% for (var i = 0; i < data.length; i++) { %>
         <tr>
-          <td><%= data.SKU %></td>
-          <td><%= data.ShippingDate %></td>
-          <td><%= data.ShippingPONumber %></td>
-          <td><%= data.ShippingQty %></td>
-          <td><%= data.IncostUnit %></td>
-          <td><%= data.ShippingTotalAmt %></td>
-          <td><%= data.Received %></td>
-          <td><%= data.ShippingDateReceived %></td>
+          <td><%= data[i].SKU %></td>
+          <td><%= data[i].ShippingDate %></td>
+          <td><%= data[i].ShippingPONumber %></td>
+          <td><%= data[i].ShippingQty %></td>
+          <td><%= data[i].IncostUnit %></td>
+          <td><%= data[i].ShippingTotalAmt %></td>
+          <td><%= data[i].Received %></td>
+          <td><%= data[i].ShippingDateReceived %></td>
         </tr>
+        <% } %>
       </table>
     </section>
     <form action="/shipping">

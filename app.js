@@ -18,8 +18,6 @@ var create = require('./createTables');
 var importCSV = require('./Import');
 var exportCSV = require('./Export');
 
-var Highcharts = require('highcharts');
-
 //outputs our api requests to console to help display what is occuring
 app.use(morgan('short'))
 //this allows access to the any file in the public folder
@@ -153,9 +151,18 @@ app.get("/shipping",function(req, res){
 });
 
 app.get("/sales-reports",function(req, res){
-	res.render('sales-reports', {qs: req.query});
-	// console.log(req.query);
-  // console.log("rendering product page")
+	const sqlquery = "Select Count(ShippingTable.Received) as Yes FROM ShippingTable WHERE Received = 'Yes'"
+	conn.query(sqlquery, function(error,rows,fields) {
+	dataYes = rows[0].Yes;
+		const sqlquery = "Select Count(ShippingTable.Received) as No FROM ShippingTable WHERE Received = 'No'"
+		conn.query(sqlquery, function(error,rows,fields) {
+			dataNo = rows[0].No;
+			console.log(dataNo);
+			res.render('sales-reports', {dataYes,dataNo});
+		})
+	})
+
+
 });
 
 //For search function, grabs sku to search within database
@@ -169,7 +176,8 @@ app.post("/shipping",urlencodedParser,function(req, res){
 	} else if (sku != "" && poNum == ""){
 	  const sqlquery = "SELECT * FROM ShippingTable WHERE SKU = ?"
 	  conn.query(sqlquery, [sku],function(error,rows,fields) {
-			var data = rows[0];
+			var data = rows;
+			console.log(data);
 			if (data == "" || data == null){
 				console.log("query empty");
 				res.redirect('/shipping');
@@ -180,7 +188,7 @@ app.post("/shipping",urlencodedParser,function(req, res){
 	} else if (sku == "" && poNum != "") {
 		const sqlquery = "SELECT * FROM ShippingTable WHERE ShippingPONumber = ?"
 		conn.query(sqlquery, [poNum], function(error,rows,fields) {
-			var data = rows[0];
+			var data = rows;
 			if (data == "" || data == null){
 				console.log("query empty");
 				res.redirect('/shipping');
@@ -317,7 +325,7 @@ app.post("/sales",urlencodedParser,function(req, res){
 	} else if (sku != '' && poNum == '' && vendor == ''){
 	  const sqlquery = "SELECT * FROM SalesTable WHERE SKU = ?"
 	  conn.query(sqlquery, [sku],function(error,rows,fields) {
-			var data = rows[0];
+			var data = rows;
 			if (data == null || data == "") {
 				console.log('Empty Query!');
 				res.redirect('/sales');
@@ -328,7 +336,7 @@ app.post("/sales",urlencodedParser,function(req, res){
 	} else if (sku == '' && poNum != '' && vendor == '') {
 		const sqlquery = "SELECT * FROM SalesTable WHERE SalesPONumber = ?"
 		conn.query(sqlquery, [poNum], function(error,rows,fields) {
-			var data = rows[0];
+			var data = rows;
 			if (data == null || data == '') {
 				console.log('Empty Query!');
 				res.redirect('/sales');
@@ -339,7 +347,7 @@ app.post("/sales",urlencodedParser,function(req, res){
 	} else if (sku == '' && poNum == '' && vendor != '') {
 		const sqlquery = "SELECT * FROM SalesTable WHERE Vendor = ?"
 		conn.query(sqlquery, [vendor], function(error,rows,fields) {
-			var data = rows[0];
+			var data = rows;
 			if (data == null || data == '') {
 				console.log('Empty Query!');
 				res.redirect('/sales');
