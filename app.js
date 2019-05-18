@@ -199,6 +199,38 @@ app.post("/shipping",urlencodedParser,function(req, res){
 	}
 });
 
+app.post("/shipping-date",urlencodedParser,function(req, res){
+	// console.log(req.body.skuNumber);
+	// console.log(req.body.shPOnum);
+	var startYear = req.body.startDateYear;
+	var startMonth = req.body.startDateMonth;
+	var startDay = req.body.startDateDay;
+	var endYear = req.body.endDateYear;
+	var endMonth = req.body.endDateMonth;
+	var endDay = req.body.endDateDay;
+
+	startDate = ""+startYear+"-"+startMonth+"-"+startDay;
+	console.log(startDate);
+	endDate = ""+endYear+"-"+endMonth+"-"+endDay;
+	console.log(endDate);
+	if (startDate == "" && endDate == "") {
+		res.redirect('/shipping');
+	}
+	else{
+		const sqlquery = "Select * FROM ShippingTable WHERE DATE(ShippingDate) >= ? AND DATE(ShippingDate) <= ?"
+	  conn.query(sqlquery, [startDate,endDate],function(error,rows,fields) {
+			var data = rows;
+			console.log(data);
+			if (data == "" || data == null){
+				console.log("query empty");
+				res.redirect('/shipping');
+			} else {
+				res.render('shipping-search', {data});
+			}
+		})
+	}
+});
+
 //Grabs data entered and inserts new record into database
 app.post("/insertshipping", urlencodedParser, function(req, res){
 	var sku = parseInt(req.body.skuNumber);

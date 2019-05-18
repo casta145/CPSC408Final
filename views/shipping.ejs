@@ -29,6 +29,18 @@
       <input type="submit" value="Submit">
       </form>
 
+      <form class="search-form" id="search-form" action="/shipping-date" method="POST">
+      <label for="startDate">Search Start Date:</label>
+      <input class="sku-search" id="startDateYear" name="startDateYear" type="text" value="<%= qs.startDateYear %>" placeholder="YYYY"/>
+      <input class="sku-search" id="startDateMonth" name="startDateMonth" type="text" value="<%= qs.startDateMonth %>" placeholder="MM"/>
+      <input class="sku-search" id="startDateDay" name="startDateDay" type="text" value="<%= qs.startDateDay %>" placeholder="DD"/>
+      <label for="endDate"> and End Date:</label>
+      <input class="sku-search" id="endDateYear" name="endDateYear" type="text" value="<%= qs.endDateYear %>" placeholder="YYYY"/>
+      <input class="sku-search" id="endDateMonth" name="endDateMonth" type="text" value="<%= qs.endDateMonth %>" placeholder="MM"/>
+      <input class="sku-search" id="endDateDay" name="endDateDay" type="text" value="<%= qs.endDateDay %>" placeholder="DD"/>
+      <input type="submit" value="Submit">
+      </form>
+
         <div class="inserttoDB">
             <label for="insertBtn">Create New Record:</label>
             <button id="insertBtn" class="insert-buttons">INSERT</button>
