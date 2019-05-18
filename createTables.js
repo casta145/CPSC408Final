@@ -110,6 +110,7 @@ function intializeTables() {
     }
     //console.log('Sales Table Created!');
   });
+  // console.log("Tables Created");
 }
 
 module.exports = intializeTables();

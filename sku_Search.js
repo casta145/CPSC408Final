@@ -24,9 +24,3 @@ $(document).ready(function(){
     return false;
   });
 });
-
-
-//   var sku = req.body.skuNumber;
-//   const sqlquery = "SELECT * FROM USWarehouse WHERE SKU = ?"
-//   conn.query(sqlquery, [sku],function(error,rows,fields) {
-//     res.json(rows);

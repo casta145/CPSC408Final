@@ -15,6 +15,7 @@ app.set('view engine', 'ejs')
 //functions in other js files
 var conn = require('./dbConnection');
 var create = require('./createTables');
+var mkdir = require('./makeDir');
 var importCSV = require('./Import');
 var exportCSV = require('./Export');
 
@@ -167,8 +168,6 @@ app.get("/sales-reports",function(req, res){
 
 //For search function, grabs sku to search within database
 app.post("/shipping",urlencodedParser,function(req, res){
-	// console.log(req.body.skuNumber);
-	// console.log(req.body.shPOnum);
 	var sku = req.body.skuNumber;
 	var poNum = req.body.shPOnum;
 	if (sku == "" && poNum == "") {
@@ -177,7 +176,6 @@ app.post("/shipping",urlencodedParser,function(req, res){
 	  const sqlquery = "SELECT * FROM ShippingTable WHERE SKU = ?"
 	  conn.query(sqlquery, [sku],function(error,rows,fields) {
 			var data = rows;
-			console.log(data);
 			if (data == "" || data == null){
 				console.log("query empty");
 				res.redirect('/shipping');
@@ -196,7 +194,7 @@ app.post("/shipping",urlencodedParser,function(req, res){
 				res.render('shipping-search', {data});
 			}
 		})
-	} else {
+	} else if (sku != "" || poNum != ""){
 		res.redirect('/shipping');
 	}
 });
@@ -483,8 +481,6 @@ app.post("/sales-search-all",urlencodedParser,function(req, res){
 
 //authenticates uers credentials before login
 app.post('/home-page',urlencodedParser,function(request, response) {
-	console.log(request.body)
-
 	var email = request.body.email;
 	var password = request.body.password;
 	if (email && password) {
@@ -493,6 +489,7 @@ app.post('/home-page',urlencodedParser,function(request, response) {
 				request.session.loggedin = true;
 				request.session.email = email;
         create;
+				mkdir;
 				response.render('home');
 			} else {
         response.render('index')
@@ -518,139 +515,9 @@ app.post("/importDB",(req, res) => {
 });
 
 app.post("/exportDB",(req, res) => {
-  // exportCSV.import();
-	exportCSV.test
+  exportCSV.import();
 	res.redirect('/home');
 });
-
-// app.post("/editProduct",urlencodedParser,(req,res) => {
-// 	var sku = parseInt(req.body.skuNumber);
-// 	var description = String(req.body.description);
-// 	var sellable = parseInt(req.body.sellable);
-// 	var poNumber = parseInt(req.body.openPO);
-// 	var moq =  parseInt(req.body.moq);
-// 	var leadtime =  parseInt(req.body.leadtime);
-// 	var backorder =  parseInt(req.body.bkorder);
-// 	var insert = [[sku,description,sellable,poNumber,moq,leadtime,backorder]];
-// 	const sqlquery = "INSERT INTO USWarehouse (SKU, Description, SellableOnHand, OpenPOQuantity, MOQ, LeadTime, BackOrders) VALUES ?";
-// 	conn.query(sqlquery, [insert],function(error,rows,fields) {
-// 		console.log(error);
-// 		var data = rows;
-// 		//console.log(data);
-// 		// res.render('shipping-search', {data});
-// 	})
-// 		// console.log(sku);
-// });
-
-// app.get('/product-search', (req, res) => {
-//   console.log("Should have printed in output");
-//   var sku = req.body.skuNumber;
-//   const sqlquery = "SELECT * FROM USWarehouse WHERE SKU = ?"
-//   conn.query(sqlquery, [sku],function(error,rows,fields) {
-//     res.json(rows);
-//   })
-// });
-
-// // -> Import CSV File to MySQL database
-// function importCsvData2MySQL(filePath){
-//     var sku = [];
-//     var Description = [];
-//     var SellableOnHand = [];
-//     var OpenPOqty = [];
-//     var OneMonthSales = [];
-//     var ThreeMonthSales = [];
-//     var SixMonthSales = [];
-//     var BackOrder = [];
-//     var LeadTime = [];
-//     var MoQ = [];
-//     var FobSH = [];
-//     var PackagingType = [];
-//     var L_cm = [];
-//     var W_cm = [];
-//     var H_cm = [];
-//     var GW_kg = [];
-//     var NW_kg = [];
-//     var Carton_qty = [];
-//     var Pallet_Dim_cm = [];
-//     var Pallet_Ctns = [];
-//     var Pallet_qty = [];
-//     var Pallet_WG_qty = [];
-//     var Shipping_Date = [];
-//     var Shipping_PO = [];
-//     var Shipping_Qty = [];
-//     var Cost_Unit = [];
-//     var Shipping_Amt = [];
-//     var Shpmt_Received = [];
-//     var Shpmt_Date_Received = [];
-//     var Vendor = [];
-//     var Sales_PO = [];
-//     var Sales_Qty = [];
-//     var Sales_Date = [];
-//     var Sales_Amt = [];
-//
-//     let stream = fs.createReadStream(filePath, 'utf-8');
-//     let csvData = [];
-//     let csvStream = csv
-//         .parse()
-//         .on("data", function (data) {
-//             csvData.push(data);
-//         })
-//         .on("end", function () {
-//             // Remove Header ROW
-//             csvData.shift();
-//             //loop through each item in array and save them to appropriate sub-array
-//             // csvData.forEach(function(entry) {
-//             //   sku = csvData[0];
-//             //   Description = csvData[1];
-//             //   SellableOnHand = csvData[2];
-//             //   OpenPOqty = csvData[3];
-//             //   OneMonthSales = csvData[4];
-//             //   ThreeMonthSales = csvData[5];
-//             //   SixMonthSales = csvData[6];
-//             //   BackOrder = csvData[7];
-//             //   LeadTime = csvData[8];
-//             //   MoQ = csvData[9];
-//             //   FobSH = csvData[10];
-//             //   PackagingType = csvData[11];
-//             //   L_cm = csvData[12];
-//             //   W_cm = csvData[13];
-//             //   H_cm = csvData[14];
-//             //   GW_kg = csvData[15];
-//             //   NW_kg = csvData[16];
-//             //   Carton_qty = csvData[17];
-//             //   Pallet_Dim_cm = csvData[18];
-//             //   Pallet_Ctns = csvData[19];
-//             //   Pallet_qty = csvData[20];
-//             //   Pallet_WG_qty = csvData[21];
-//             //   Shipping_Date = csvData[22];
-//             //   Shipping_PO = csvData[23];
-//             //   Shipping_Qty = csvData[24];
-//             //   Cost_Unit = csvData[25];
-//             //   Shipping_Amt = csvData[26];
-//             //   Shpmt_Received = csvData[27];
-//             //   Shpmt_Date_Received = csvData[28];
-//             //   Vendor = csvData[29];
-//             //   Sales_PO = csvData[30];
-//             //   Sales_Qty = csvData[31];
-//             //   Sales_Date = csvData[32];
-//             //   Sales_Amt = csvData[33];
-//             // });
-//             // Open the MySQL connection
-//             // conn.connect((error) => {
-// //                 if (error) {
-// //                     console.error(error);
-// //                 } else {
-//                     let query = 'INSERT INTO TestTable (SKU, Test1, Test2, Test3, Test4, Test5, Test6) VALUES ?';
-//                     conn.query(query, [csvData], (error, response) => {
-//                         console.log(error || response);
-//                     });
-//                 })
-// //             });
-//   // delete file after saving to MySQL database
-//   // fs.unlinkSync(filePath)
-//   //         });
-//   stream.pipe(csvStream);
-// }
 
 //Anything below here is stuff used for testing purposes
 //----------------------------------------------------------------------------

@@ -9,12 +9,4 @@ function getConnection() {
   })
 }
 
-// connection.connect(function(error) {
-//   if (error) {
-//     console.error("Error connecting: " + error.stack);
-//     return
-//   }
-//   console.log("Connected as id" + connection.threadId);
-// });
-
 module.exports = getConnection();
