@@ -7,11 +7,10 @@ Class: CPSC 408-01 (Professor Rene)
 * Name: Kolby Ramirez, SID: 2277817
 
 ## NOTICE:
-You can go to this link to view it on glitch: LINK
-or
 You can clone your own copy and cd into the project folder and use 
 * node app.js
 in the console to run the application on Localhost: 3000
+please make sure you are on the chapman wifi to properly connect to the database
 
 ## Program Description
 We get the inspiration to create this project through Kolby's uncle. His uncle owns a business where he sells products to customers but he keeps track of everything through an excel sheet. This can be a very tedious and dangerous if not handled properly. So we decided to create a custom database website to help him keep track of everything going in and out of his business.
